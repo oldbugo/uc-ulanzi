@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/ulanzi_dock"]
+resolver = "2"
