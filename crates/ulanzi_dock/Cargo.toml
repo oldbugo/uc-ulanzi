@@ -6,9 +6,13 @@ description = "Ulanzi D200H protocol layer plus a software fake dock (no real HI
 publish = false
 
 [dependencies]
+png = "0.17"
 serde_json = "1"
 zip = { version = "2", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
-png = "0.17"
 tempfile = "3"
+
+[[bin]]
+name = "fake-dock"
+path = "src/bin/fake_dock.rs"
