@@ -25,16 +25,15 @@ pub type Packet = [u8; PACKET_SIZE];
 #[repr(u16)]
 pub enum Command {
     SetButtons = 0x0001,
-    /// Source defines the id (`OUT_PARTIALLY_UPDATE_BUTTONS`) but no layout.
-    /// TODO: layout unknown, no encoder provided on purpose.
+    /// Same safe ZIP layout as SetButtons; only changed entries are included.
     PartiallyUpdateButtons = 0x000d,
     SetSmallWindowData = 0x0006,
     SetBrightness = 0x000a,
     /// `OUT_SET_LABEL_STYLE` in the source.
     SetLabelStyle = 0x000b,
-    /// Source defines the id only. TODO: payload unknown; we send it empty.
+    /// Empty payload (Bitfocus src/device.ts).
     LockScreen = 0x000f,
-    /// Source defines the id only. TODO: payload unknown; we send it empty.
+    /// Empty payload (Bitfocus src/device.ts).
     UnlockScreen = 0x0010,
     InButton = 0x0101,
     /// Not in the Bitfocus source; seen on hardware (about every 10 s).
