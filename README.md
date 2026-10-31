@@ -84,6 +84,12 @@ after a wide-area press. It is off by default. Whether it defeats this firmware'
 clock cycling requires hands-on acceptance. Only raw input state is preserved;
 press/release comes from the action byte, not an assumed meaning of state.
 Heartbeat, brightness replies and `0x010b` preserve opaque payloads.
+The `0x010b` ACK is identified before rejecting its declared payload length,
+matching Bitfocus's command-specific ACK filter. Valid bounded payloads are
+preserved; out-of-range ACK lengths become an empty opaque ACK rather than a
+reconnect. Magic/header checks and length validation for every other command
+remain strict. This compatibility fix is software-tested; it does not establish
+the cause of the user's reported hardware freeze without runtime evidence.
 
 ## Protocol evidence
 

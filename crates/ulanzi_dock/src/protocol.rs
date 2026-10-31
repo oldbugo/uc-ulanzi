@@ -223,6 +223,14 @@ pub fn parse_event(report: &[u8]) -> Result<Event, ProtocolError> {
     let length = u32::from_le_bytes([report[4], report[5], report[6], report[7]]) as usize;
     let available = (report.len() - HEADER_SIZE).min(FIRST_CHUNK_DATA);
     if length > available {
+        // Bitfocus device.ts d467064 identifies and ignores 0x010b ACKs before
+        // parsing their declared payload length. This firmware reply is opaque;
+        // a nonstandard length must not trigger a drop/reconnect/page loop.
+        // Preserve valid ACK payloads below, but never infer or expose bytes for
+        // a length we cannot validate. All other commands remain strict.
+        if cmd == Command::In010b as u16 {
+            return Ok(Event::In010b(Vec::new()));
+        }
         return Err(ProtocolError::Truncated { declared: length, available });
     }
     let data = &report[HEADER_SIZE..HEADER_SIZE + length];
@@ -440,6 +448,27 @@ mod tests {
         assert_eq!(parse_event(&pkt(0x030a, b"ok")).unwrap(), Event::BrightnessAck(b"ok".to_vec()));
         assert_eq!(parse_event(&pkt(0x010b, &[9])).unwrap(), Event::In010b(vec![9]));
         assert_eq!(parse_event(&pkt(0x7777, &[1, 2])).unwrap(), Event::Unknown { cmd: 0x7777, payload: vec![1, 2] });
+    }
+
+    #[test]
+    fn opaque_010b_ack_length_does_not_force_reconnect() {
+        for declared in [FIRST_CHUNK_DATA as u32 + 1, 65536, u32::MAX] {
+            let report = build_framed_packet(Command::In010b as u16, declared, &[9]).unwrap();
+            assert_eq!(parse_event(&report).unwrap(), Event::In010b(Vec::new()));
+            // The exemption is for this observed ACK command only. Heartbeat,
+            // button, device info and unknown messages still validate length.
+            for command in [0x0103, 0x0101, 0x0303, 0x7777] {
+                let report = build_framed_packet(command, declared, &[9]).unwrap();
+                assert!(matches!(parse_event(&report), Err(ProtocolError::Truncated { .. })));
+            }
+        }
+        let mut report = build_framed_packet(Command::In010b as u16, u32::MAX, &[]).unwrap();
+        report[0] = 0;
+        assert!(matches!(parse_event(&report), Err(ProtocolError::BadMagic(_))));
+        assert!(matches!(parse_event(&[0x7c, 0x7c, 0x01, 0x0b]), Err(ProtocolError::TooShort(4))));
+        // A framed ACK with a valid empty or bounded payload stays compatible.
+        assert_eq!(parse_event(&pkt(0x010b, &[])).unwrap(), Event::In010b(vec![]));
+        assert_eq!(parse_event(&pkt(0x010b, &[9, 10])).unwrap(), Event::In010b(vec![9, 10]));
     }
 
     #[test]
