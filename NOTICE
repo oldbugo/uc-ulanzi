@@ -6,6 +6,11 @@ bitfocus/companion-surface-ulanzi-stream-controller (read at commit
 d467064ddab2a4508106244c05291931151b88ee), which is itself derived from
 redphx/strmdck (src/strmdck/devices/ulanzi_d200.py).
 
+Step 1.1 additionally reviewed Bitfocus src/device.ts at the same commit for
+empty lock/unlock payloads, partial ZIP update selection and report framing;
+cross-checked redphx/strmdck at 7e29ab32d1692faed445024eda0a0cdd5c576710.
+The new native Windows transport and session policy are original implementation.
+
 ----------------------------------------------------------------------
 bitfocus/companion-surface-ulanzi-stream-controller
 

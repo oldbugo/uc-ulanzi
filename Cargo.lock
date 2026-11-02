@@ -321,6 +321,7 @@ dependencies = [
  "png",
  "serde_json",
  "tempfile",
+ "windows-sys",
  "zip",
 ]
 

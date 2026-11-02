@@ -2,7 +2,7 @@
 name = "ulanzi_dock"
 version = "0.0.0"
 edition = "2021"
-description = "Ulanzi D200H protocol layer plus a software fake dock (no real HID)"
+description = "Ulanzi D200H protocol, fake dock and opt-in Windows HID transport"
 publish = false
 
 [dependencies]
@@ -12,6 +12,9 @@ zip = { version = "2", default-features = false, features = ["deflate"] }
 
 [dev-dependencies]
 tempfile = "3"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Devices_HumanInterfaceDevice", "Win32_Devices_DeviceAndDriverInstallation", "Win32_Foundation", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Threading", "Win32_Security"] }
 
 [[bin]]
 name = "fake-dock"

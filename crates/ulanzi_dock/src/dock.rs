@@ -2,12 +2,12 @@
 //!
 //! A `Transport` moves whole 1024-byte packets. The real HID transport (step 1.1)
 //! adds/strips the report-id byte (HID report = `0x00` + 1024 bytes) and plugs in
-//! here without protocol changes. This crate has no real transport.
+//! here without protocol changes. See `windows` for the explicit opt-in transport.
 
 use crate::page::{build_page_zip, PageSpec};
 use crate::protocol::*;
 use std::io;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 pub trait Transport {
     fn write(&mut self, packet: &Packet) -> io::Result<()>;
@@ -17,6 +17,7 @@ pub trait Transport {
 
 pub struct Dock<T: Transport> {
     transport: T,
+    failed: bool,
 }
 
 fn invalid<E: std::error::Error + Send + Sync + 'static>(e: E) -> io::Error {
@@ -25,7 +26,7 @@ fn invalid<E: std::error::Error + Send + Sync + 'static>(e: E) -> io::Error {
 
 impl<T: Transport> Dock<T> {
     pub fn new(transport: T) -> Self {
-        Self { transport }
+        Self { transport, failed: false }
     }
     pub fn transport(&self) -> &T {
         &self.transport
@@ -39,16 +40,48 @@ impl<T: Transport> Dock<T> {
 
     fn send_simple(&mut self, cmd: Command, payload: &[u8]) -> io::Result<()> {
         let p = build_simple_packet(cmd, payload).map_err(invalid)?;
-        self.transport.write(&p)
+        self.write_packet(&p)
+    }
+
+    fn write_packet(&mut self, packet: &Packet) -> io::Result<()> {
+        if self.failed {
+            return Err(io::Error::new(
+                io::ErrorKind::BrokenPipe,
+                "previous write failed; reconnect required",
+            ));
+        }
+        if let Err(e) = self.transport.write(packet) {
+            self.failed = true;
+            return Err(e);
+        }
+        Ok(())
     }
 
     /// Send an already built page ZIP (refuses payloads that break the firmware bad-byte rule).
     pub fn set_buttons_zip(&mut self, zip: &[u8]) -> io::Result<()> {
-        if !is_payload_safe(zip) {
-            return Err(io::Error::new(io::ErrorKind::InvalidInput, "zip violates the bad-byte rule"));
+        self.send_zip(Command::SetButtons, zip)
+    }
+
+    /// Same ZIP layout as a full page, sent with 0x000d. Include only changed keys.
+    /// Bitfocus src/device.ts at d467064: updateKeys passes opts.partial to sendZip.
+    pub fn update_buttons_zip(&mut self, zip: &[u8]) -> io::Result<()> {
+        self.send_zip(Command::PartiallyUpdateButtons, zip)
+    }
+
+    fn send_zip(&mut self, command: Command, zip: &[u8]) -> io::Result<()> {
+        if zip.len() > 8 * 1024 * 1024 || !is_payload_safe(zip) {
+            return Err(io::Error::new(io::ErrorKind::InvalidInput, "unsafe or oversized ZIP"));
         }
-        for p in build_chunked_packets(Command::SetButtons, zip) {
-            self.transport.write(&p)?;
+        let start = Instant::now();
+        for p in build_chunked_packets(command, zip) {
+            if start.elapsed() > Duration::from_secs(30) {
+                self.failed = true;
+                return Err(io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "page transfer deadline; reconnect required",
+                ));
+            }
+            self.write_packet(&p)?;
         }
         Ok(())
     }
@@ -70,12 +103,12 @@ impl<T: Transport> Dock<T> {
         self.send_simple(Command::SetLabelStyle, &encode_label_style(style))
     }
 
-    /// Payload layout unknown in the source; sent empty (TODO).
+    /// Empty payload, as Bitfocus src/device.ts lockScreen at d467064.
     pub fn lock_screen(&mut self) -> io::Result<()> {
         self.send_simple(Command::LockScreen, &[])
     }
 
-    /// Payload layout unknown in the source; sent empty (TODO).
+    /// Empty payload, as Bitfocus src/device.ts unlockScreen at d467064.
     pub fn unlock_screen(&mut self) -> io::Result<()> {
         self.send_simple(Command::UnlockScreen, &[])
     }

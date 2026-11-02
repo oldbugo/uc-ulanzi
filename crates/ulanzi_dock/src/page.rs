@@ -8,7 +8,10 @@
 
 use crate::protocol::{is_payload_safe, SmallWindowMode};
 use serde_json::{json, Map, Value};
-use std::io::{Cursor, Write};
+use std::{
+    collections::BTreeMap,
+    io::{Cursor, Read, Write},
+};
 use zip::{write::SimpleFileOptions, CompressionMethod, ZipWriter};
 
 pub const KEY_COUNT: usize = 13;
@@ -41,7 +44,11 @@ pub struct PageSpec {
 
 impl Default for PageSpec {
     fn default() -> Self {
-        Self { keys: vec![KeySpec::default(); KEY_COUNT], wide_png: None, small_window_mode: -1 }
+        Self {
+            keys: vec![KeySpec::default(); KEY_COUNT],
+            wide_png: None,
+            small_window_mode: -1,
+        }
     }
 }
 
@@ -50,7 +57,10 @@ impl PageSpec {
         Self::default()
     }
     pub fn set_key(&mut self, idx: usize, name: Option<&str>, png: Vec<u8>) {
-        self.keys[idx] = KeySpec { name: name.map(String::from), png: Some(png) };
+        self.keys[idx] = KeySpec {
+            name: name.map(String::from),
+            png: Some(png),
+        };
     }
 }
 
@@ -144,7 +154,9 @@ fn build_manifest(spec: &PageSpec) -> (Value, Vec<(String, Vec<u8>)>) {
 }
 
 fn compress(manifest: &Value, icons: &[(String, Vec<u8>)], dummy: Option<&[u8]>) -> Result<Vec<u8>, PageError> {
-    let opts = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated).compression_level(Some(1));
+    let opts = SimpleFileOptions::default()
+        .compression_method(CompressionMethod::Deflated)
+        .compression_level(Some(1));
     let mut zip = ZipWriter::new(Cursor::new(Vec::new()));
     zip.start_file("manifest.json", opts)?;
     zip.write_all(manifest.to_string().as_bytes())?;
@@ -181,16 +193,119 @@ pub fn build_page_zip_unchecked(spec: &PageSpec) -> Result<Vec<u8>, PageError> {
 /// offset 1016 + 1024*n is 0x00 or 0x7c (same method as the source).
 pub fn build_page_zip(spec: &PageSpec) -> Result<Vec<u8>, PageError> {
     let (m, icons) = build_manifest(spec);
-    let mut payload = compress(&m, &icons, None)?;
+    safe_compress(&m, &icons)
+}
+
+/// Build a ZIP containing only the selected cells; unrelated keys and wide-area
+/// mode are omitted. Empty selections are rejected instead of sending a reset.
+pub fn build_partial_page_zip(spec: &PageSpec, indices: &[usize]) -> Result<Vec<u8>, PageError> {
+    if indices.is_empty() || indices.iter().any(|&i| i > WIDE_INDEX) {
+        return Err(PageError::Zip("invalid partial-update selection".into()));
+    }
+    let (mut manifest, mut icons) = build_manifest(spec);
+    manifest.as_object_mut().expect("object").retain(|cell, _| {
+        indices.iter().any(|&i| {
+            let (c, r) = key_cell(i).expect("validated");
+            cell == &format!("{c}_{r}")
+        })
+    });
+    // An explicitly selected empty key must clear that cell.
+    for &i in indices {
+        let (c, r) = key_cell(i).expect("validated");
+        manifest
+            .as_object_mut()
+            .unwrap()
+            .entry(format!("{c}_{r}"))
+            .or_insert_with(|| json!({"State":0,"ViewParam":[{"Text":""}]}));
+    }
+    icons.retain(|(name, _)| {
+        if name == "wide" {
+            indices.contains(&WIDE_INDEX)
+        } else {
+            indices.iter().any(|&i| name == &format!("k{i:02}"))
+        }
+    });
+    safe_compress(&manifest, &icons)
+}
+
+fn safe_compress(m: &Value, icons: &[(String, Vec<u8>)]) -> Result<Vec<u8>, PageError> {
+    let mut payload = compress(m, icons, None)?;
     let mut retries = 0;
     while !is_payload_safe(&payload) {
         retries += 1;
         if retries > MAX_RETRIES {
             return Err(PageError::Unsafe);
         }
-        payload = compress(&m, &icons, Some(&dummy_bytes(retries)))?;
+        payload = compress(m, icons, Some(&dummy_bytes(retries)))?;
     }
     Ok(payload)
+}
+
+/// Merge a successful partial update into the reconnect snapshot. Only referenced
+/// image entries are retained, keeping repeated live updates bounded.
+pub fn merge_page_zip(base: &[u8], partial: &[u8]) -> Result<Vec<u8>, PageError> {
+    let (mut manifest, mut images) = read_page_zip(base)?;
+    let (patch, patch_images) = read_page_zip(partial)?;
+    manifest.as_object_mut().unwrap().extend(patch.as_object().unwrap().clone());
+    images.extend(patch_images);
+    let mut icons = Vec::new();
+    for (_, entry) in manifest.as_object().unwrap() {
+        if let Some(path) = entry["ViewParam"][0]["Icon"].as_str() {
+            let name = image_id(path)?;
+            let bytes = images.get(path).ok_or_else(|| PageError::Zip("missing referenced image".into()))?;
+            if !icons.iter().any(|(id, _): &(String, Vec<u8>)| id == name) {
+                icons.push((name.to_string(), bytes.clone()));
+            }
+        }
+    }
+    safe_compress(&manifest, &icons)
+}
+fn image_id(path: &str) -> Result<&str, PageError> {
+    let id = path
+        .strip_prefix("Images/")
+        .and_then(|p| p.strip_suffix(".png"))
+        .filter(|p| !p.is_empty() && p.bytes().all(|c| c.is_ascii_alphanumeric() || c == b'_' || c == b'-'));
+    id.ok_or_else(|| PageError::Zip("unexpected image path".into()))
+}
+type ZipContents = (Value, BTreeMap<String, Vec<u8>>);
+fn read_page_zip(bytes: &[u8]) -> Result<ZipContents, PageError> {
+    if bytes.len() > 8 * 1024 * 1024 {
+        return Err(PageError::Zip("ZIP exceeds size limit".into()));
+    }
+    let mut ar = zip::ZipArchive::new(Cursor::new(bytes))?;
+    let mut manifest = String::new();
+    ar.by_name("manifest.json")?.take(65537).read_to_string(&mut manifest)?;
+    if manifest.len() > 65536 {
+        return Err(PageError::Zip("manifest exceeds size limit".into()));
+    }
+    let manifest: Value = serde_json::from_str(&manifest).map_err(|e| PageError::Zip(e.to_string()))?;
+    let object = manifest
+        .as_object()
+        .ok_or_else(|| PageError::Zip("manifest is not an object".into()))?;
+    let mut images = BTreeMap::new();
+    let mut total = 0;
+    for (cell, entry) in object {
+        if !(0..=WIDE_INDEX).any(|i| {
+            let (c, r) = key_cell(i).unwrap();
+            cell == &format!("{c}_{r}")
+        }) {
+            return Err(PageError::Zip("unknown manifest cell".into()));
+        }
+        if let Some(path) = entry["ViewParam"][0]["Icon"].as_str() {
+            image_id(path)?;
+            if images.contains_key(path) {
+                continue;
+            }
+            let mut data = Vec::new();
+            ar.by_name(path)?.take(2 * 1024 * 1024 + 1).read_to_end(&mut data)?;
+            total += data.len();
+            if data.len() > 2 * 1024 * 1024 || total > 16 * 1024 * 1024 {
+                return Err(PageError::Zip("images exceed size limit".into()));
+            }
+            images.insert(path.to_string(), data);
+        }
+    }
+    Ok((manifest, images))
 }
 
 #[cfg(test)]
@@ -209,6 +324,28 @@ mod tests {
                 (s >> 24) as u8
             })
             .collect()
+    }
+
+    #[test]
+    fn partial_omits_unselected_wide_and_merge_keeps_other_keys() {
+        let mut base = PageSpec::new();
+        base.keys[0].name = Some("old".into());
+        base.keys[1].name = Some("keep".into());
+        let base = build_page_zip(&base).unwrap();
+        let mut patch = PageSpec::new();
+        patch.keys[0].name = Some("new".into());
+        let patch = build_partial_page_zip(&patch, &[0]).unwrap();
+        let (m, _) = read_page_zip(&patch).unwrap();
+        assert_eq!(m.as_object().unwrap().len(), 1);
+        assert!(m.get("3_2").is_none());
+        let merged = merge_page_zip(&base, &patch).unwrap();
+        let (m, _) = read_page_zip(&merged).unwrap();
+        assert_eq!(m["0_0"]["ViewParam"][0]["Text"], "new");
+        assert_eq!(m["1_0"]["ViewParam"][0]["Text"], "keep");
+        assert!(m.get("3_2").is_some());
+        assert!(is_payload_safe(&merged));
+        assert!(build_partial_page_zip(&PageSpec::new(), &[]).is_err());
+        assert!(build_partial_page_zip(&PageSpec::new(), &[14]).is_err());
     }
 
     #[test]

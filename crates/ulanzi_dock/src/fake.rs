@@ -21,6 +21,8 @@ pub struct FakeDock {
     pub label_style: Option<String>,
     pub locked: bool,
     pub pages_received: usize,
+    pub partial_updates_received: usize,
+    pub commands_received: Vec<u16>,
     pub last_manifest: Option<Value>,
     /// Payload offsets that broke the bad-byte rule in a received message.
     pub bad_byte_violations: Vec<usize>,
@@ -36,7 +38,10 @@ impl FakeDock {
 
     /// Save each received page's PNGs and manifest into `dir`.
     pub fn with_out_dir(dir: impl Into<PathBuf>) -> Self {
-        Self { out_dir: Some(dir.into()), ..Self::default() }
+        Self {
+            out_dir: Some(dir.into()),
+            ..Self::default()
+        }
     }
 
     pub fn set_out_dir(&mut self, dir: impl Into<PathBuf>) {
@@ -50,11 +55,21 @@ impl FakeDock {
     /// Note: the state byte mirrors the action (1 press / 0 release); real-device
     /// semantics of the state byte are unverified.
     pub fn press(&mut self, idx: u8) {
-        self.push(build_button_packet(&ButtonEvent { state: 1, index: idx, kind: ButtonKind::Button, action: ButtonAction::Press }));
+        self.push(build_button_packet(&ButtonEvent {
+            state: 1,
+            index: idx,
+            kind: ButtonKind::Button,
+            action: ButtonAction::Press,
+        }));
     }
 
     pub fn release(&mut self, idx: u8) {
-        self.push(build_button_packet(&ButtonEvent { state: 0, index: idx, kind: ButtonKind::Button, action: ButtonAction::Release }));
+        self.push(build_button_packet(&ButtonEvent {
+            state: 0,
+            index: idx,
+            kind: ButtonKind::Button,
+            action: ButtonAction::Release,
+        }));
     }
 
     pub fn heartbeat(&mut self) {
@@ -75,14 +90,22 @@ impl FakeDock {
     }
 
     fn handle(&mut self, cmd: u16, payload: Vec<u8>) {
+        self.commands_received.push(cmd);
         if !is_payload_safe(&payload) {
             self.bad_byte_violations.extend(find_unsafe_offsets(&payload));
             self.errors.push(format!("command {cmd:#06x}: payload violates bad-byte rule"));
         }
         match Command::from_u16(cmd) {
             Some(Command::SetButtons) => {
-                if let Err(e) = self.accept_page(&payload) {
+                if let Err(e) = self.accept_page(&payload, false) {
                     self.errors.push(format!("page rejected: {e}"));
+                }
+            }
+            Some(Command::PartiallyUpdateButtons) => {
+                if let Err(e) = self.accept_page(&payload, true) {
+                    self.errors.push(format!("partial page rejected: {e}"));
+                } else {
+                    self.partial_updates_received += 1;
                 }
             }
             Some(Command::SetBrightness) => {
@@ -106,7 +129,7 @@ impl FakeDock {
         }
     }
 
-    fn accept_page(&mut self, zip_bytes: &[u8]) -> Result<(), String> {
+    fn accept_page(&mut self, zip_bytes: &[u8], partial: bool) -> Result<(), String> {
         let mut ar = zip::ZipArchive::new(Cursor::new(zip_bytes)).map_err(|e| e.to_string())?;
         let mut manifest_text = String::new();
         ar.by_name("manifest.json")
@@ -117,6 +140,7 @@ impl FakeDock {
         let obj = manifest.as_object().ok_or("manifest is not an object")?;
 
         let mut files: Vec<(String, Vec<u8>)> = Vec::new();
+        let mut cleared = Vec::new();
         for (slot, entry) in obj {
             let (c, r) = slot.split_once('_').ok_or_else(|| format!("bad slot {slot}"))?;
             let (c, r): (u8, u8) = (
@@ -124,35 +148,64 @@ impl FakeDock {
                 r.parse().map_err(|_| format!("bad slot {slot}"))?,
             );
             let idx = cell_key(c, r).ok_or_else(|| format!("slot {slot} not on the dock"))?;
-            entry.get("State").and_then(Value::as_u64).ok_or_else(|| format!("{slot}: no State"))?;
-            let vp = entry.get("ViewParam").and_then(Value::as_array).filter(|a| !a.is_empty()).ok_or_else(|| format!("{slot}: no ViewParam"))?;
+            entry
+                .get("State")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| format!("{slot}: no State"))?;
+            let vp = entry
+                .get("ViewParam")
+                .and_then(Value::as_array)
+                .filter(|a| !a.is_empty())
+                .ok_or_else(|| format!("{slot}: no ViewParam"))?;
+            let name = if idx == WIDE_INDEX {
+                "wide.png".to_string()
+            } else {
+                format!("key_{idx:02}.png")
+            };
             if let Some(icon) = vp[0].get("Icon").and_then(Value::as_str) {
                 let mut data = Vec::new();
-                ar.by_name(icon).map_err(|e| format!("{slot}: icon {icon}: {e}"))?.read_to_end(&mut data).map_err(|e| e.to_string())?;
+                ar.by_name(icon)
+                    .map_err(|e| format!("{slot}: icon {icon}: {e}"))?
+                    .read_to_end(&mut data)
+                    .map_err(|e| e.to_string())?;
                 if !data.starts_with(&[0x89, b'P', b'N', b'G']) {
                     return Err(format!("{slot}: icon is not a PNG"));
                 }
-                let name = if idx == WIDE_INDEX { "wide.png".to_string() } else { format!("key_{idx:02}.png") };
                 files.push((name, data));
+            } else {
+                cleared.push(name);
             }
         }
         debug_assert!(KEY_COUNT == 13);
+
+        let next_manifest = if partial {
+            let mut merged = self.last_manifest.clone().unwrap_or_else(|| serde_json::json!({}));
+            merged.as_object_mut().ok_or("previous manifest invalid")?.extend(obj.clone());
+            merged
+        } else {
+            manifest
+        };
 
         if let Some(dir) = &self.out_dir {
             fs::create_dir_all(dir).map_err(|e| e.to_string())?;
             for entry in fs::read_dir(dir).map_err(|e| e.to_string())?.flatten() {
                 let n = entry.file_name().to_string_lossy().into_owned();
-                if n == "wide.png" || n == "manifest.json" || (n.starts_with("key_") && n.ends_with(".png")) {
+                if !partial && (n == "wide.png" || n == "manifest.json" || (n.starts_with("key_") && n.ends_with(".png"))) {
                     let _ = fs::remove_file(entry.path());
                 }
             }
             for (name, data) in &files {
                 fs::write(dir.join(name), data).map_err(|e| e.to_string())?;
             }
-            fs::write(dir.join("manifest.json"), &manifest_text).map_err(|e| e.to_string())?;
+            if partial {
+                for name in cleared {
+                    let _ = fs::remove_file(dir.join(name));
+                }
+            }
+            fs::write(dir.join("manifest.json"), next_manifest.to_string()).map_err(|e| e.to_string())?;
         }
         self.pages_received += 1;
-        self.last_manifest = Some(manifest);
+        self.last_manifest = Some(next_manifest);
         Ok(())
     }
 }
@@ -233,12 +286,38 @@ mod tests {
         dock.transport_mut().release(3);
         dock.transport_mut().heartbeat();
         dock.transport_mut().device_info("D200H");
-        let ev = |a| Event::Button(ButtonEvent { state: (a == ButtonAction::Press) as u8, index: 3, kind: ButtonKind::Button, action: a });
+        let ev = |a| {
+            Event::Button(ButtonEvent {
+                state: (a == ButtonAction::Press) as u8,
+                index: 3,
+                kind: ButtonKind::Button,
+                action: a,
+            })
+        };
         assert_eq!(dock.poll_event(t).unwrap(), Some(ev(ButtonAction::Press)));
         assert_eq!(dock.poll_event(t).unwrap(), Some(ev(ButtonAction::Release)));
         assert_eq!(dock.poll_event(t).unwrap(), Some(Event::Heartbeat(vec![])));
         assert_eq!(dock.poll_event(t).unwrap(), Some(Event::DeviceInfo("D200H".into())));
         assert_eq!(dock.poll_event(t).unwrap(), None);
+    }
+
+    #[test]
+    fn partial_keeps_unrelated_images_and_clears_only_selected_cell() {
+        use crate::page::{build_page_zip, build_partial_page_zip};
+        let dir = tempfile::tempdir().unwrap();
+        let mut dock = Dock::new(FakeDock::with_out_dir(dir.path()));
+        let mut spec = PageSpec::new();
+        let keep = solid(196, 196, [1, 2, 3]);
+        spec.set_key(0, None, solid(196, 196, [4, 5, 6]));
+        spec.set_key(1, None, keep.clone());
+        dock.set_buttons_zip(&build_page_zip(&spec).unwrap()).unwrap();
+        dock.update_buttons_zip(&build_partial_page_zip(&PageSpec::new(), &[0]).unwrap())
+            .unwrap();
+        assert!(!dir.path().join("key_00.png").exists());
+        assert_eq!(fs::read(dir.path().join("key_01.png")).unwrap(), keep);
+        let disk: Value = serde_json::from_slice(&fs::read(dir.path().join("manifest.json")).unwrap()).unwrap();
+        assert_eq!(disk, dock.transport().last_manifest.clone().unwrap());
+        assert_eq!(disk["1_0"]["ViewParam"][0]["Icon"], "Images/k01.png");
     }
 
     #[test]
