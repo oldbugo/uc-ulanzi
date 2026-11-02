@@ -10,7 +10,12 @@ Studio plugins). GitHub topic: `unified-control`. No organisation is required.
 `crates/ulanzi_dock` provides protocol framing, page/partial-page ZIP builders,
 event parsing, a transport-independent `Dock`, a software `FakeDock`, a queued
 `Session`, and explicit opt-in Windows HID transport. This is library groundwork;
-Unified Control does not yet depend on this crate or control the real dock.
+Unified Control 0.3.0 consumes this crate at the exact reviewed commit
+`9ea93c06ad8ff3ae6f01784a4403886593ffff5d` and owns explicit native enablement,
+Studio exclusion and the visible tray. Its user-confirmed dock results and
+remaining checks are recorded in `oldbugo/unified-control`'s `docs/acceptance.md`.
+That application evidence does not establish every native transport edge case
+listed below. The crate version remains `0.0.0`; the consumer pin is unchanged.
 
 **Built and checked on Windows, 2026-10-30:** native transport code compiles;
 30 automated tests pass using fake transports and pure byte/filter functions.
