@@ -195,15 +195,17 @@ pub fn parse(p: &Plain) -> Incoming {
 
 // ---------- values ----------
 
-/// The three keys whose typing can be set (button index 0..2).
+/// The controls whose typing can be set (button index 0..3). K1..K3 are proven on the real key; the knob
+/// press (button 3) is not: its key-typing get and set are marked unverified.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum KeyId {
     K1,
     K2,
     K3,
+    KnobPress,
 }
 impl KeyId {
-    pub const ALL: [KeyId; 3] = [KeyId::K1, KeyId::K2, KeyId::K3];
+    pub const ALL: [KeyId; 4] = [KeyId::K1, KeyId::K2, KeyId::K3, KeyId::KnobPress];
     pub fn index(self) -> u8 {
         self as u8
     }
@@ -219,6 +221,7 @@ impl KeyId {
             KeyId::K1 => "Win + H",
             KeyId::K2 => "Enter",
             KeyId::K3 => "Esc",
+            KeyId::KnobPress => "Backspace",
         }
     }
 }
@@ -519,7 +522,11 @@ impl Request {
     /// True when this exact command was sent to the real key and its result checked (2026-11-16).
     /// All gets were answered; of the sets only standby time and key typing were checked.
     pub fn verified_on_hardware(&self) -> bool {
-        !self.is_set() || matches!(self, Request::SetStandbyTime(_) | Request::SetKeyTyping(..))
+        match self {
+            Request::GetKeyTyping(KeyId::KnobPress) | Request::SetKeyTyping(KeyId::KnobPress, _) => false,
+            Request::SetStandbyTime(_) | Request::SetKeyTyping(..) => true,
+            r => !r.is_set(),
+        }
     }
 
     /// The plaintext to send. Panics only on an internal mistake (a banned command byte).
@@ -728,6 +735,12 @@ mod tests {
             assert!(!r.verified_on_hardware(), "{r:?}");
         }
         assert!(Request::SetStandbyTime(600).verified_on_hardware());
+        assert!(Request::SetKeyTyping(KeyId::K3, KeyTyping::own_code(KeyId::K3)).verified_on_hardware());
+        let knob = KeyTyping::own_code(KeyId::KnobPress);
+        assert_eq!(knob.0, vec![KeyEntry::Usage(0x6e)], "knob press own code F19");
+        assert_eq!(Request::SetKeyTyping(KeyId::KnobPress, knob.clone()).plain(), hex("01 06 50 00 03 01 01 02 6e"));
+        assert!(!Request::SetKeyTyping(KeyId::KnobPress, knob).verified_on_hardware());
+        assert!(!Request::GetKeyTyping(KeyId::KnobPress).verified_on_hardware());
         assert!(SleepTime::new(1234).is_none());
         assert!(SleepTime::new(0).is_some());
     }

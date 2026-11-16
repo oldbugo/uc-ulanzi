@@ -30,12 +30,21 @@ Unified Control uses this crate. The vault page "Ulanzi AU05 Vibe Key facts" has
 | Set standby time | `01 01 2c 02 <u32 s>` | Sent and read back (600 s) |
 | Set key typing | `01 06 50 00 <btn> 01 <n> <entries>` | Sent and read back (K3 = F22) |
 | Set power-off time, light mode, all-on brightness, mic noise reduction, light work-mode type | from static analysis | Not sent yet |
+| Get or set key typing for the knob press (button 3) | same layout, button 3 | Not sent yet |
 
 `Request::verified_on_hardware()` records this table. Unified Control refuses an unverified set on a
 real key. When the orchestrator has checked one on the real key, change that function and its test.
 
 Never sent (no encoder exists, and `Request::plain` also checks): reboot (0x0C, 0x26), serial
 number, flash ID or UUID (0x0A, 0x0B, 0x81), receiver command 0x05, firmware or OTA, keep-alive 0x23.
+
+## Key events (2026-11-16 finding)
+
+Not every control reports on the private channel. In all captures only K1 (index 0) and the knob turns
+(index 4 and 5) sent private events; K2, K3 and the knob press never did. Apps must not depend on private
+key events for actions. The working method: the key types its own unused code (K1 F20, K2 F21, K3 F22,
+knob press F19) and the app claims that code with a global hotkey. `reference/scripts/au05_k3_hotkey.py`
+is the listen-only prototype that proved it with K3.
 
 ## Tests
 

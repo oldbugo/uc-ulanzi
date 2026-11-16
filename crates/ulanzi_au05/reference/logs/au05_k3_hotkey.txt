@@ -1,0 +1,3 @@
+   4.4s  F22 (K3) -> Claude in front, Ctrl+D pressed
+stopped by Ctrl+C
+done
