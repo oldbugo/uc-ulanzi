@@ -312,18 +312,28 @@ impl KeyTyping {
         t.validate()?;
         Ok(t)
     }
-    /// Only types 2 and 3 are written, at most four entries, no zero usage.
+    /// What may be written: empty (factory default), or at most one modifier entry (first) followed by one to
+    /// three keys, four entries in all. Keys are only the usages the page can produce ([`usage_allowed`]):
+    /// no Power, no Application key, no Caps/Num/Scroll Lock.
     pub fn validate(&self) -> Result<(), String> {
+        if self.0.is_empty() {
+            return Ok(());
+        }
         if self.0.len() > MAX_KEY_ENTRIES {
             return Err("A key types at most four entries".into());
         }
-        for e in &self.0 {
+        let mut usages = 0;
+        for (i, e) in self.0.iter().enumerate() {
             match *e {
-                KeyEntry::Usage(u) if (0x04..=0x73).contains(&u) => {}
-                KeyEntry::Modifiers(m) if m != 0 => {}
+                KeyEntry::Modifiers(m) if i == 0 && m != 0 => {}
+                KeyEntry::Modifiers(_) => return Err("Modifiers come once, first".into()),
+                KeyEntry::Usage(u) if usage_allowed(u) => usages += 1,
+                KeyEntry::Usage(_) => return Err("This key cannot be set".into()),
                 KeyEntry::Unknown { .. } => return Err("Only keyboard keys and modifiers can be set".into()),
-                _ => return Err("Invalid key entry".into()),
             }
+        }
+        if usages == 0 {
+            return Err("Choose a main key as well as modifiers".into());
         }
         Ok(())
     }
@@ -351,6 +361,13 @@ impl KeyTyping {
         }
         parts.join(" + ")
     }
+}
+
+/// The HID usages a key may be set to type: exactly those [`usage_from_name`] produces (letters, digits,
+/// Enter, Esc, Backspace, Tab, Space, Minus, Plus, F1..F24, Insert..Up). Excludes Caps Lock 0x39, Scroll Lock
+/// 0x47, Pause 0x48, Num Lock 0x53, Application 0x65 and Power 0x66.
+pub fn usage_allowed(u: u8) -> bool {
+    matches!(u, 0x04..=0x2e | 0x3a..=0x45 | 0x49..=0x52 | 0x68..=0x73)
 }
 
 /// HID keyboard usage for a key name (upper case).
@@ -529,6 +546,11 @@ impl Request {
         }
     }
 
+    /// Key typing (cmd 0x50) can answer slowly: one real read took 15 s.
+    pub fn slow_reply(&self) -> bool {
+        matches!(self, Request::GetKeyTyping(_) | Request::SetKeyTyping(..))
+    }
+
     /// The plaintext to send. Panics only on an internal mistake (a banned command byte).
     pub fn plain(&self) -> Vec<u8> {
         let v = match self {
@@ -586,6 +608,66 @@ impl Request {
             _ => true,
         }
     }
+}
+
+impl Request {
+    /// The request a plaintext encodes, if it is exactly one allowlisted request (same bytes, zero padding).
+    pub fn from_plain(p: &Plain) -> Option<Request> {
+        if p[0] != 0x01 {
+            return None;
+        }
+        let u32_at = |i: usize| u32::from_le_bytes([p[i], p[i + 1], p[i + 2], p[i + 3]]);
+        let key = |i: u8| KeyId::from_index(i);
+        let r = match (p[1], p[2], p[3]) {
+            (0x01, 0x02, 0x01) => Request::GetBattery,
+            (0x01, 0x0d, 0x01) => Request::GetStandbyStatus,
+            (0x01, 0x2c, 0x01) => Request::GetStandbyTime,
+            (0x01, 0x2c, 0x02) => Request::SetStandbyTime(u32_at(4)),
+            (0x01, 0x42, 0x01) => Request::GetSleepTime,
+            (0x01, 0x42, 0x02) => Request::SetSleepTime(SleepTime::new(u32_at(4))?),
+            (0x06, 0x10, 0x01) if p[4] == 0 => Request::GetControlCode(p[5]),
+            (0x06, 0x50, 0x01) => Request::GetKeyTyping(key(p[4])?),
+            (0x06, 0x50, 0x00) if p[5] == 1 && (p[6] as usize) <= MAX_KEY_ENTRIES => {
+                let n = p[6] as usize;
+                let entries = (0..n).map(|i| KeyEntry::from_bytes(p[7 + 2 * i], p[8 + 2 * i])).collect();
+                Request::SetKeyTyping(key(p[4])?, KeyTyping(entries))
+            }
+            (0x0b, 0x88, 0x01) => Request::GetLight,
+            (0x0b, 0x88, 0x04) if p[4] == 1 && p[5] == 0 => Request::SetLightMode(p[6]),
+            (0x0b, 0x88, 0x04) if p[4] == 2 && p[5] == 0 && p[6] == 0 => Request::SetLightBrightness(p[7]),
+            (0x0b, 0x88, 0x04) if p[4] == 4 && p[6] == 0 && p[7] == 0 => {
+                Request::SetWorkModeType { record: p[5], kind: p[8] }
+            }
+            (0x0b, 0x89, 0x01) => Request::GetHooksMode,
+            (0x01, 0x90, 0x01) => Request::GetMicNr,
+            (0x01, 0x90, 0x04) => Request::SetMicNr(MicNr {
+                level: p[4],
+                a: u16::from_le_bytes([p[5], p[6]]),
+                b: u16::from_le_bytes([p[7], p[8]]),
+            }),
+            _ => return None,
+        };
+        let mut again = [0u8; PLAIN_LEN];
+        let bytes = r.plain();
+        again[..bytes.len()].copy_from_slice(&bytes);
+        (again == *p).then_some(r)
+    }
+}
+
+/// The last check before a report goes to the real key, independent of how the report was built: it must
+/// decrypt to exactly one allowlisted request in range, with zero tail bytes, and on a real key it must be a
+/// command checked on the real key.
+pub fn check_outgoing(report: &Report, real_key: bool) -> Result<Request, String> {
+    if report[1 + PLAIN_LEN..].iter().any(|b| *b != 0) {
+        return Err("AU05 report tail must be zero".into());
+    }
+    let plain = decode_frame(report).ok_or("AU05 reports start with 0x55")?;
+    let request = Request::from_plain(&plain).ok_or("Not an allowlisted AU05 command")?;
+    request.validate()?;
+    if real_key && !request.verified_on_hardware() {
+        return Err("Not checked on the real AU05".into());
+    }
+    Ok(request)
 }
 
 // ---------- reply decoding ----------
@@ -769,6 +851,68 @@ mod tests {
             let p = r.plain();
             assert!(!NEVER_SEND.contains(&p[2]) && p[2] != 0x81, "{r:?}");
             assert!(p.len() <= PLAIN_LEN);
+        }
+    }
+
+    #[test]
+    fn the_outgoing_check_accepts_exactly_the_allowlist() {
+        let all = [
+            Request::GetBattery,
+            Request::GetStandbyStatus,
+            Request::GetStandbyTime,
+            Request::SetStandbyTime(600),
+            Request::GetSleepTime,
+            Request::SetSleepTime(SleepTime::new(7200).unwrap()),
+            Request::GetControlCode(5),
+            Request::GetKeyTyping(KeyId::K2),
+            Request::SetKeyTyping(KeyId::K1, KeyTyping::parse("Ctrl + D").unwrap()),
+            Request::SetKeyTyping(KeyId::K3, KeyTyping::factory()),
+            Request::GetLight,
+            Request::SetLightMode(1),
+            Request::SetLightBrightness(4),
+            Request::SetWorkModeType { record: 1, kind: 2 },
+            Request::GetHooksMode,
+            Request::GetMicNr,
+            Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 }),
+        ];
+        for r in all {
+            assert_eq!(check_outgoing(&r.frame(), false), Ok(r.clone()), "{r:?}");
+            assert_eq!(check_outgoing(&r.frame(), true).is_ok(), r.verified_on_hardware(), "{r:?}");
+        }
+        // Banned or unknown commands, out-of-range values, extra bytes and a non-zero tail are refused.
+        for bad in [
+            "01 01 0c 00",             // reboot
+            "01 02 26 00",             // dongle reboot
+            "01 01 23 01",             // keep-alive
+            "06 01 23 00 01",          // Studio's keep-alive form
+            "01 01 05 00",             // receiver command 0x05
+            "01 01 0a 02 01 02",       // serial number write
+            "01 01 2c 02 05 00 00 00", // standby 5 s, out of range
+            "01 01 02 01 ff",          // a get with an extra byte
+            "01 06 50 00 00 01 01 02 66", // Power key
+            "01 06 50 00 00 01 02 02 04 03 01", // modifier after a key
+        ] {
+            let f = encode_frame(&hex(bad));
+            assert!(check_outgoing(&f, false).is_err(), "{bad}");
+        }
+        let mut tail = Request::GetBattery.frame();
+        tail[63] = 1;
+        assert!(check_outgoing(&tail, false).is_err());
+    }
+
+    #[test]
+    fn key_entries_are_limited_to_what_the_page_can_produce() {
+        let t = |e: Vec<KeyEntry>| KeyTyping(e).validate();
+        assert!(t(vec![]).is_ok(), "factory default");
+        assert!(t(vec![KeyEntry::Modifiers(1), KeyEntry::Usage(0x07)]).is_ok());
+        assert!(t(vec![KeyEntry::Modifiers(1)]).is_err(), "a modifier alone");
+        assert!(t(vec![KeyEntry::Usage(0x07), KeyEntry::Modifiers(1)]).is_err(), "modifier not first");
+        assert!(t(vec![KeyEntry::Modifiers(1), KeyEntry::Modifiers(2), KeyEntry::Usage(7)]).is_err());
+        for u in [0x39, 0x47, 0x48, 0x53, 0x65, 0x66, 0x00, 0x74] {
+            assert!(t(vec![KeyEntry::Usage(u)]).is_err(), "{u:#x}");
+        }
+        for k in KeyId::ALL {
+            assert!(KeyTyping::own_code(k).validate().is_ok());
         }
     }
 

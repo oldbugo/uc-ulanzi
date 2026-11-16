@@ -187,9 +187,11 @@ impl WindowsAu05 {
 
 impl Transport for WindowsAu05 {
     fn write(&mut self, report: &Report, timeout: Duration) -> io::Result<()> {
-        if report[0] != REPORT_ID {
-            return Err(io::Error::new(io::ErrorKind::InvalidInput, "AU05 reports start with 0x55"));
-        }
+        // The lowest real write enforces the allowlist itself: only checked commands reach the real key,
+        // whoever built the report.
+        crate::protocol::check_outgoing(report, true)
+            .map_err(|e| io::Error::new(io::ErrorKind::PermissionDenied, e))?;
+        debug_assert_eq!(report[0], REPORT_ID);
         self.transfer(Some(report), timeout).map(|_| ())
     }
     fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>> {

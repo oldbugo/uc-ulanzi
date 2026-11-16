@@ -31,6 +31,13 @@ pub struct FakeState {
     pub reply_delay: Duration,
     pub drop_replies: u32,
     pub stall_writes: bool,
+    /// Extra delay for key-typing replies (cmd 0x50): a late reply, not a lost one (one real read took 15 s).
+    pub key_typing_delay: Duration,
+    /// Refuse, like the real transport, anything not checked on the real key.
+    pub act_like_real: bool,
+    /// Writes that arrived while an earlier reply was still outstanding. Must stay 0.
+    pub overlapped: u32,
+    outstanding: u32,
     pub status_period: Option<Duration>,
     inbox: VecDeque<(Instant, Report)>,
     next_status: Option<Instant>,
@@ -60,6 +67,10 @@ impl Default for FakeState {
             reply_delay: Duration::from_millis(5),
             drop_replies: 0,
             stall_writes: false,
+            key_typing_delay: Duration::ZERO,
+            act_like_real: false,
+            overlapped: 0,
+            outstanding: 0,
             status_period: Some(Duration::from_secs(10)),
             inbox: VecDeque::new(),
             next_status: None,
@@ -238,10 +249,21 @@ impl Transport for FakeTransport {
             std::thread::sleep(timeout);
             return Err(io::Error::new(io::ErrorKind::TimedOut, "fake AU05 write deadline"));
         }
+        if s.act_like_real {
+            protocol::check_outgoing(report, true)
+                .map_err(|e| io::Error::new(io::ErrorKind::PermissionDenied, e))?;
+        }
         let Some(p) = protocol::decode_frame(report) else {
             s.forbidden.push(report.to_vec());
             return Ok(());
         };
+        if protocol::check_outgoing(report, false).is_err() {
+            s.forbidden.push(p.to_vec());
+            return Ok(());
+        }
+        if s.outstanding > 0 {
+            s.overlapped += 1;
+        }
         let used = p.iter().rposition(|b| *b != 0).map_or(0, |i| i + 1);
         s.received.push(p[..used.max(4)].to_vec());
         match answer(&mut s, &p) {
@@ -250,7 +272,9 @@ impl Transport for FakeTransport {
                 s.drop_replies -= 1;
             }
             Some(v) => {
-                let due = Instant::now() + s.reply_delay;
+                let extra = if p[2] == 0x50 { s.key_typing_delay } else { Duration::ZERO };
+                let due = Instant::now() + s.reply_delay + extra;
+                s.outstanding += 1;
                 s.inbox.push_back((due, plain_report(&v)));
             }
             None => s.forbidden.push(p[..used.max(4)].to_vec()),
@@ -274,8 +298,13 @@ impl Transport for FakeTransport {
                         s.next_status = s.status_period.map(|p| t + p);
                     }
                 }
-                if s.inbox.front().is_some_and(|(due, _)| *due <= now) {
-                    return Ok(s.inbox.pop_front().map(|(_, r)| r));
+                // The first message that is due: a late reply does not hold back events behind it.
+                if let Some(i) = s.inbox.iter().position(|(due, _)| *due <= now) {
+                    let r = s.inbox.remove(i).map(|(_, r)| r);
+                    if r.and_then(|r| protocol::decode_frame(&r)).is_some_and(|p| p[0] == 0x81) {
+                        s.outstanding = s.outstanding.saturating_sub(1);
+                    }
+                    return Ok(r);
                 }
             }
             if Instant::now() >= end {

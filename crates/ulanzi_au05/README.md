@@ -13,14 +13,19 @@ Unified Control uses this crate. The vault page "Ulanzi AU05 Vibe Key facts" has
 - `protocol`: the frame (`0x55`, seven cipher blocks, seven zero bytes), the decoder for device
   messages (key and knob events, the battery status every 10 s, replies), and the command allowlist
   (`Request`). Only a `Request` can be encoded, so a command that is not on the list cannot be sent.
-- `session`: the safe queue. One request in flight. Each write has a time limit of 2 s. Nothing is sent
-  until the key has sent a message in the last 15 s, because the key sleeps. A missing reply gets one
-  retry. A write that does not finish is not retried. At the first stall the session pauses for
-  30 s. After three stalls in a row it stops until the app calls `resume`.
+- `session`: the safe queue. One request in flight, and never a second write while a reply is
+  outstanding. Each write has a time limit of 2 s. Nothing is sent unless the key has sent a message in
+  the last 11 s, because the key sleeps. No retry: a reply that does not come in time (20 s for key
+  typing, cmd 0x50, which once took 15 s; 2 s for other commands) or a write that does not finish pauses
+  sending for 30 s. After three stalls in a row it stops until the app calls `resume`. A set is sent only
+  when the key is quiet: 1.5 s after it woke and 1.5 s after the last key or knob event. With
+  `real_key`, the session refuses commands not checked on the real key.
 - `fake`: a fake AU05 that is encrypted in both directions, sleeps like the real key, keeps its
   settings and records every command. Tests use only this.
 - `windows`: the opt-in Windows transport. Importing the crate does no device I/O. Only the
-  orchestrator may call `WindowsAu05::open_first`, with the user present.
+  orchestrator may call `WindowsAu05::open_first`, with the user present. Its `write` checks every report
+  itself (`protocol::check_outgoing`): it must decrypt to exactly one allowlisted, in-range command that was
+  checked on the real key. Anything else is refused before it reaches the device.
 
 ## Evidence for each command
 
@@ -35,7 +40,7 @@ Unified Control uses this crate. The vault page "Ulanzi AU05 Vibe Key facts" has
 `Request::verified_on_hardware()` records this table. Unified Control refuses an unverified set on a
 real key. When the orchestrator has checked one on the real key, change that function and its test.
 
-Never sent (no encoder exists, and `Request::plain` also checks): reboot (0x0C, 0x26), serial
+Never sent (no encoder exists, `Request::plain` checks, and the real transport refuses them): reboot (0x0C, 0x26), serial
 number, flash ID or UUID (0x0A, 0x0B, 0x81), receiver command 0x05, firmware or OTA, keep-alive 0x23.
 
 ## Key events (2026-11-16 finding)
