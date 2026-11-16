@@ -1,0 +1,440 @@
+401A6A92: cmp         r15d,1
+401A6A96: jne         00000001401A6AAC
+401A6A98: mov         edx,8
+401A6A9D: mov         r8d,edx
+401A6AA0: mov         rcx,qword ptr [rsp+48h]
+401A6AA5: call        qword ptr [00000001405E0F68h]
+401A6AAB: nop
+401A6AAC: lea         rcx,[rbp+00000000000000D0h]
+401A6AB3: call        qword ptr [00000001405E0F40h]
+401A6AB9: mov         rcx,qword ptr [rbp+0000000000000148h]
+401A6AC0: xor         rcx,rsp
+401A6AC3: call        0000000140553000
+401A6AC8: add         rsp,258h
+401A6ACF: pop         r15
+401A6AD1: pop         r14
+401A6AD3: pop         r13
+401A6AD5: pop         r12
+401A6AD7: pop         rdi
+401A6AD8: pop         rsi
+401A6AD9: pop         rbx
+401A6ADA: pop         rbp
+401A6ADB: ret
+401A6AE0: push        rbx
+401A6AE2: sub         rsp,20h
+401A6AE6: mov         r8,qword ptr [rcx+00000000000007A8h]
+401A6AED: mov         rbx,rcx
+401A6AF0: test        r8,r8
+401A6AF3: je          00000001401A6C16
+401A6AF9: mov         rax,qword ptr [r8+0000000000000290h]
+401A6B00: mov         qword ptr [rsp+30h],rbp
+401A6B05: mov         qword ptr [rsp+38h],rsi
+401A6B0A: mov         qword ptr [rsp+40h],rdi
+401A6B0F: mov         rdx,qword ptr [rax+20h]
+401A6B13: mov         rax,qword ptr [r8+00000000000001C0h]
+401A6B1A: movzx       esi,byte ptr [rdx+0Ah]
+401A6B1E: mov         rcx,qword ptr [rax+20h]
+401A6B22: not         sil
+401A6B25: mov         rax,qword ptr [r8+0000000000000298h]
+401A6B2C: and         sil,1
+401A6B30: movzx       edi,byte ptr [rcx+0Ah]
+401A6B34: mov         rcx,qword ptr [rax+20h]
+401A6B38: not         dil
+401A6B3B: and         dil,1
+401A6B3F: movzx       ebp,byte ptr [rcx+0Ah]
+401A6B43: mov         rcx,qword ptr [rbx+0000000000000A70h]
+401A6B4A: not         bpl
+401A6B4D: and         bpl,1
+401A6B51: test        rcx,rcx
+401A6B54: je          00000001401A6B72
+401A6B56: test        sil,sil
+401A6B59: jne         00000001401A6B65
+401A6B5B: test        dil,dil
+401A6B5E: jne         00000001401A6B65
+401A6B60: xor         r8d,r8d
+401A6B63: jmp         00000001401A6B68
+401A6B65: mov         r8b,1
+401A6B68: mov         edx,2
+401A6B6D: call        00000001403A4AD0
+401A6B72: mov         rcx,qword ptr [rbx+0000000000000A78h]
+401A6B79: test        rcx,rcx
+401A6B7C: je          00000001401A6B8C
+401A6B7E: movzx       r8d,bpl
+401A6B82: mov         edx,3
+401A6B87: call        000000014007EAE0
+401A6B8C: test        sil,sil
+401A6B8F: jne         00000001401A6B9F
+401A6B91: test        dil,dil
+401A6B94: jne         00000001401A6B9F
+401A6B96: test        bpl,bpl
+401A6B99: jne         00000001401A6B9F
+401A6B9B: xor         edx,edx
+401A6B9D: jmp         00000001401A6BA1
+401A6B9F: mov         dl,1
+401A6BA1: mov         rcx,qword ptr [rbx+0000000000000358h]
+401A6BA8: xor         r8d,r8d
+401A6BAB: call        0000000140196210
+401A6BB0: mov         rcx,qword ptr [rbx+00000000000007A8h]
+401A6BB7: mov         r8d,4
+401A6BBD: movzx       edx,sil
+401A6BC1: mov         rcx,qword ptr [rcx+0000000000000290h]
+401A6BC8: call        0000000140196210
+401A6BCD: mov         rcx,qword ptr [rbx+00000000000007A8h]
+401A6BD4: mov         r8d,4
+401A6BDA: movzx       edx,dil
+401A6BDE: mov         rcx,qword ptr [rcx+00000000000001C0h]
+401A6BE5: call        0000000140196210
+401A6BEA: mov         rcx,qword ptr [rbx+00000000000007A8h]
+401A6BF1: mov         r8d,4
+401A6BF7: movzx       edx,bpl
+401A6BFB: mov         rcx,qword ptr [rcx+0000000000000298h]
+401A6C02: call        0000000140196210
+401A6C07: mov         rdi,qword ptr [rsp+40h]
+401A6C0C: mov         rsi,qword ptr [rsp+38h]
+401A6C11: mov         rbp,qword ptr [rsp+30h]
+401A6C16: add         rsp,20h
+401A6C1A: pop         rbx
+401A6C1B: ret
+401A6C20: mov         qword ptr [rsp+18h],rbx
+401A6C25: push        rbp
+401A6C26: push        rsi
+401A6C27: push        rdi
+401A6C28: push        r12
+401A6C2A: push        r13
+401A6C2C: push        r14
+401A6C2E: push        r15
+401A6C30: lea         rbp,[rsp-27h]
+401A6C35: sub         rsp,0C0h
+401A6C3C: mov         rax,qword ptr [0000000143130A40h]
+401A6C43: xor         rax,rsp
+401A6C46: mov         qword ptr [rbp+17h],rax
+401A6C4A: mov         rbx,rdx
+401A6C4D: mov         rdi,rcx
+401A6C50: lea         r9,[00000001406157B0h]
+401A6C57: mov         r8d,3AEh
+401A6C5D: lea         rdx,[0000000140614A80h]
+401A6C64: lea         rcx,[rbp-71h]
+401A6C68: call        qword ptr [00000001405E0F88h]
+401A6C6E: lea         rdx,[rbp-79h]
+401A6C72: mov         rcx,rax
+401A6C75: call        qword ptr [00000001405E0C80h]
+401A6C7B: nop
+401A6C7C: lea         rdx,[0000000140615818h]
+401A6C83: mov         rcx,rax
+401A6C86: call        qword ptr [00000001405E0EA0h]
+401A6C8C: lea         rsi,[rdi+0000000000000778h]
+401A6C93: mov         rdx,rsi
+401A6C96: mov         rcx,rax
+401A6C99: call        qword ptr [00000001405E0E98h]
+401A6C9F: lea         rdx,[0000000140615754h]
+401A6CA6: mov         rcx,rax
+401A6CA9: call        qword ptr [00000001405E0EA0h]
+401A6CAF: lea         r14,[rbx+78h]
+401A6CB3: mov         rdx,r14
+401A6CB6: mov         rcx,rax
+401A6CB9: call        qword ptr [00000001405E0E98h]
+401A6CBF: lea         rdx,[0000000140615760h]
+401A6CC6: mov         rcx,rax
+401A6CC9: call        qword ptr [00000001405E0EA0h]
+401A6CCF: lea         r12,[rbx+60h]
+401A6CD3: mov         rdx,r12
+401A6CD6: mov         rcx,rax
+401A6CD9: call        qword ptr [00000001405E0E98h]
+401A6CDF: nop
+401A6CE0: lea         rcx,[rbp-79h]
+401A6CE4: call        qword ptr [00000001405E0EA8h]
+401A6CEA: lea         rdx,[0000000143155178h]
+401A6CF1: mov         rcx,r14
+401A6CF4: call        0000000140084F30
+401A6CF9: test        al,al
+401A6CFB: je          00000001401A6DA9
+401A6D01: lea         rcx,[rbx+0000000000000090h]
+401A6D08: lea         rdx,[00000001431551C0h]
+401A6D0F: call        0000000140084F30
+401A6D14: test        al,al
+401A6D16: jne         00000001401A6D24
+401A6D18: cmp         byte ptr [rbx+0000000000000170h],al
+401A6D1E: je          00000001401A6DA9
+401A6D24: mov         rdx,rsi
+401A6D27: mov         rcx,rdi
+401A6D2A: call        00000001401761B0
+401A6D2F: movzx       ebx,al
+401A6D32: mov         r9,r14
+401A6D35: mov         r8,r12
+401A6D38: mov         rdx,rsi
+401A6D3B: mov         rcx,rdi
+401A6D3E: call        00000001401A73D0
+401A6D43: test        bl,bl
+401A6D45: je          00000001401A6DCD
+401A6D4B: lea         r9,[00000001406157B0h]
+401A6D52: mov         r8d,3B9h
+401A6D58: lea         rdx,[0000000140614A80h]
+401A6D5F: lea         rcx,[rbp-71h]
+401A6D63: call        qword ptr [00000001405E0F88h]
+401A6D69: lea         rdx,[rbp-79h]
+401A6D6D: mov         rcx,rax
+401A6D70: call        qword ptr [00000001405E0C80h]
+401A6D76: nop
+401A6D77: lea         rdx,[00000001405F6268h]
+401A6D7E: mov         rcx,rax
+401A6D81: call        qword ptr [00000001405E0EA0h]
+401A6D87: mov         rdx,rsi
+401A6D8A: mov         rcx,rax
+401A6D8D: call        qword ptr [00000001405E0E98h]
+401A6D93: lea         rdx,[0000000140615838h]
+401A6D9A: mov         rcx,rax
+401A6D9D: call        qword ptr [00000001405E0EA0h]
+401A6DA3: nop
+401A6DA4: jmp         00000001401A7076
+401A6DA9: mov         r9,r14
+401A6DAC: mov         r8,r12
+401A6DAF: mov         rdx,rsi
+401A6DB2: mov         rcx,rdi
+401A6DB5: call        00000001401A73D0
+401A6DBA: mov         rdx,rsi
+401A6DBD: mov         rcx,rdi
+401A6DC0: call        00000001401761B0
+401A6DC5: test        al,al
+401A6DC7: jne         00000001401A701D
+401A6DCD: mov         rdx,r14
+401A6DD0: lea         rcx,[rbp-49h]
+401A6DD4: call        0000000140171820
+401A6DD9: nop
+401A6DDA: mov         dword ptr [rbp-1],1
+401A6DE1: mov         eax,dword ptr [rbp-49h]
+401A6DE4: mov         dword ptr [rbp+3],eax
+401A6DE7: mov         dword ptr [rbp+7],2
+401A6DEE: mov         eax,dword ptr [rbp-45h]
+401A6DF1: mov         dword ptr [rbp+0Bh],eax
+401A6DF4: mov         dword ptr [rbp+0Fh],3
+401A6DFB: mov         eax,dword ptr [rbp-41h]
+401A6DFE: mov         dword ptr [rbp+13h],eax
+401A6E01: lea         r13,[rbp-1]
+401A6E05: mov         ecx,dword ptr [00000001431662B0h]
+401A6E0B: mov         rax,qword ptr gs:[0000000000000058h]
+401A6E14: mov         edx,40h
+401A6E19: mov         r15,qword ptr [rax+rcx*8]
+401A6E1D: add         r15,rdx
+401A6E20: lea         rbx,[0000000143149350h]
+401A6E27: nop         word ptr [rax+rax+0000000000000000h]
+401A6E30: mov         eax,dword ptr [r15]
+401A6E33: cmp         dword ptr [0000000143149390h],eax
+401A6E39: jg          00000001401A70A7
+401A6E3F: mov         rcx,qword ptr [0000000143149358h]
+401A6E46: test        rcx,rcx
+401A6E49: jne         00000001401A6E98
+401A6E4B: mov         qword ptr [rbp-71h],rbx
+401A6E4F: mov         rcx,rbx
+401A6E52: call        qword ptr [00000001405E0AB8h]
+401A6E58: mov         byte ptr [rbp-69h],1
+401A6E5C: cmp         qword ptr [0000000143149358h],0
+401A6E64: jne         00000001401A6E84
+401A6E66: mov         ecx,258h
+401A6E6B: call        0000000140552B84
+401A6E70: mov         qword ptr [rbp-51h],rax
+401A6E74: mov         rcx,rax
+401A6E77: call        00000001400BE0F0
+401A6E7C: nop
+401A6E7D: mov         qword ptr [0000000143149358h],rax
+401A6E84: mov         rcx,rbx
+401A6E87: call        qword ptr [00000001405E0AB0h]
+401A6E8D: mov         byte ptr [rbp-69h],0
+401A6E91: mov         rcx,qword ptr [0000000143149358h]
+401A6E98: mov         r9d,dword ptr [r13+4]
+401A6E9C: mov         r8d,dword ptr [r13]
+401A6EA0: mov         rdx,rsi
+401A6EA3: call        00000001400C5DC0
+401A6EA8: lea         r9,[00000001406157B0h]
+401A6EAF: mov         r8d,3D4h
+401A6EB5: lea         rdx,[0000000140614A80h]
+401A6EBC: lea         rcx,[rbp-21h]
+401A6EC0: call        qword ptr [00000001405E0F88h]
+401A6EC6: lea         rdx,[rbp-79h]
+401A6ECA: mov         rcx,rax
+401A6ECD: call        qword ptr [00000001405E0C80h]
+401A6ED3: nop
+401A6ED4: lea         rdx,[00000001406158A0h]
+401A6EDB: mov         rcx,rax
+401A6EDE: call        qword ptr [00000001405E0EA0h]
+401A6EE4: mov         rdx,rsi
+401A6EE7: mov         rcx,rax
+401A6EEA: call        qword ptr [00000001405E0E98h]
+401A6EF0: lea         rdx,[0000000140615754h]
+401A6EF7: mov         rcx,rax
+401A6EFA: call        qword ptr [00000001405E0EA0h]
+401A6F00: mov         rdx,r14
+401A6F03: mov         rcx,rax
+401A6F06: call        qword ptr [00000001405E0E98h]
+401A6F0C: lea         rdx,[00000001406158BCh]
+401A6F13: mov         rcx,rax
+401A6F16: call        qword ptr [00000001405E0EA0h]
+401A6F1C: mov         edx,dword ptr [r13]
+401A6F20: mov         rcx,rax
+401A6F23: call        qword ptr [00000001405E0AE8h]
+401A6F29: lea         rdx,[00000001406158C8h]
+401A6F30: mov         rcx,rax
+401A6F33: call        qword ptr [00000001405E0EA0h]
+401A6F39: mov         edx,dword ptr [r13+4]
+401A6F3D: mov         rcx,rax
+401A6F40: call        qword ptr [00000001405E0AE8h]
+401A6F46: lea         rdx,[0000000140615760h]
+401A6F4D: mov         rcx,rax
+401A6F50: call        qword ptr [00000001405E0EA0h]
+401A6F56: mov         rdx,r12
+401A6F59: mov         rcx,rax
+401A6F5C: call        qword ptr [00000001405E0E98h]
+401A6F62: nop
+401A6F63: lea         rcx,[rbp-79h]
+401A6F67: call        qword ptr [00000001405E0EA8h]
+401A6F6D: add         r13,8
+401A6F71: lea         rax,[rbp+17h]
+401A6F75: cmp         r13,rax
+401A6F78: lea         rbx,[0000000143149350h]
+401A6F7F: jne         00000001401A6E30
+401A6F85: lea         r9,[00000001406157B0h]
+401A6F8C: mov         r8d,3DBh
+401A6F92: lea         rdx,[0000000140614A80h]
+401A6F99: lea         rcx,[rbp-21h]
+401A6F9D: call        qword ptr [00000001405E0F88h]
+401A6FA3: lea         rdx,[rbp-79h]
+401A6FA7: mov         rcx,rax
+401A6FAA: call        qword ptr [00000001405E0C80h]
+401A6FB0: nop
+401A6FB1: lea         rdx,[00000001406158D8h]
+401A6FB8: mov         rcx,rax
+401A6FBB: call        qword ptr [00000001405E0EA0h]
+401A6FC1: mov         rdx,rsi
+401A6FC4: mov         rcx,rax
+401A6FC7: call        qword ptr [00000001405E0E98h]
+401A6FCD: lea         rdx,[0000000140615754h]
+401A6FD4: mov         rcx,rax
+401A6FD7: call        qword ptr [00000001405E0EA0h]
+401A6FDD: mov         rdx,r14
+401A6FE0: mov         rcx,rax
+401A6FE3: call        qword ptr [00000001405E0E98h]
+401A6FE9: lea         rdx,[0000000140615760h]
+401A6FF0: mov         rcx,rax
+401A6FF3: call        qword ptr [00000001405E0EA0h]
+401A6FF9: mov         rdx,r12
+401A6FFC: mov         rcx,rax
+401A6FFF: call        qword ptr [00000001405E0E98h]
+401A7005: nop
+401A7006: lea         rcx,[rbp-79h]
+401A700A: call        qword ptr [00000001405E0EA8h]
+401A7010: nop
+401A7011: lea         rcx,[rbp-39h]
+401A7015: call        qword ptr [00000001405E0F40h]
+401A701B: jmp         00000001401A7080
+401A701D: lea         r9,[00000001406157B0h]
+401A7024: mov         r8d,3C1h
+401A702A: lea         rdx,[0000000140614A80h]
+401A7031: lea         rcx,[rbp-21h]
+401A7035: call        qword ptr [00000001405E0F88h]
+401A703B: lea         rdx,[rbp-79h]
+401A703F: mov         rcx,rax
+401A7042: call        qword ptr [00000001405E0C80h]
+401A7048: nop
+401A7049: lea         rdx,[00000001405F6268h]
+401A7050: mov         rcx,rax
+401A7053: call        qword ptr [00000001405E0EA0h]
+401A7059: mov         rdx,rsi
+401A705C: mov         rcx,rax
+401A705F: call        qword ptr [00000001405E0E98h]
+401A7065: lea         rdx,[0000000140615870h]
+401A706C: mov         rcx,rax
+401A706F: call        qword ptr [00000001405E0EA0h]
+401A7075: nop
+401A7076: lea         rcx,[rbp-79h]
+401A707A: call        qword ptr [00000001405E0EA8h]
+401A7080: mov         rcx,qword ptr [rbp+17h]
+401A7084: xor         rcx,rsp
+401A7087: call        0000000140553000
+401A708C: mov         rbx,qword ptr [rsp+0000000000000110h]
+401A7094: add         rsp,0C0h
+401A709B: pop         r15
+401A709D: pop         r14
+401A709F: pop         r13
+401A70A1: pop         r12
+401A70A3: pop         rdi
+401A70A4: pop         rsi
+401A70A5: pop         rbp
+401A70A6: ret
+401A70A7: lea         rcx,[0000000143149390h]
+401A70AE: call        0000000140552EC0
+401A70B3: cmp         dword ptr [0000000143149390h],0FFFFFFFFh
+401A70BA: jne         00000001401A6E3F
+401A70C0: lea         rcx,[00000001405D8AC0h]
+401A70C7: call        0000000140552E00
+401A70CC: lea         rcx,[0000000143149390h]
+401A70D3: call        0000000140552E54
+401A70D8: jmp         00000001401A6E3F
+401A70E0: mov         qword ptr [rsp+10h],rbx
+401A70E5: mov         qword ptr [rsp+18h],rbp
+401A70EA: mov         qword ptr [rsp+20h],rsi
+401A70EF: push        rdi
+401A70F0: push        r14
+401A70F2: push        r15
+401A70F4: sub         rsp,70h
+401A70F8: mov         r14,rcx
+401A70FB: lea         rbp,[rdx+18h]
+401A70FF: lea         r8,[rdx+30h]
+401A7103: mov         byte ptr [rsp+20h],1
+401A7108: mov         r9,rdx
+401A710B: mov         rdx,rbp
+401A710E: mov         rcx,qword ptr [rcx+0000000000000A68h]
+401A7115: call        00000001403EBDA0
+401A711A: mov         rcx,qword ptr [r14+00000000000007A8h]
+401A7121: test        rcx,rcx
+401A7124: je          00000001401A7132
+401A7126: lea         rdx,[r14+0000000000000778h]
+401A712D: call        0000000140112FE0
+401A7132: mov         rcx,qword ptr [r14+0000000000000718h]
+401A7139: test        rcx,rcx
+401A713C: je          00000001401A727A
+401A7142: mov         dword ptr [rsp+20h],0
+401A714A: lea         r9,[0000000143131610h]
+401A7151: lea         r8,[00000001431386E8h]
+401A7158: xor         edx,edx
+401A715A: call        0000000140553E1C
+401A715F: mov         r15,rax
+401A7162: test        rax,rax
+401A7165: je          00000001401A727A
+401A716B: call        000000014017F190
+401A7170: lea         r8,[r14+0000000000000778h]
+401A7177: lea         rdx,[rsp+30h]
+401A717C: mov         rcx,rax
+401A717F: call        000000014040CA30
+401A7184: nop
+401A7185: mov         rcx,qword ptr [rsp+30h]
+401A718A: mov         qword ptr [rsp+48h],rcx
+401A718F: mov         rsi,qword ptr [rsp+38h]
+401A7194: mov         qword ptr [rsp+50h],rsi
+401A7199: mov         rax,qword ptr [rsp+40h]
+401A719E: mov         qword ptr [rsp+58h],rax
+401A71A3: test        rcx,rcx
+401A71A6: je          00000001401A71AB
+401A71A8: lock inc    dword ptr [rcx]
+401A71AB: mov         qword ptr [rsp+60h],rsi
+401A71B0: lea         rbx,[rax+rax*2]
+401A71B4: shl         rbx,4
+401A71B8: add         rbx,rsi
+401A71BB: mov         qword ptr [rsp+68h],rbx
+401A71C0: cmp         rsi,rbx
+401A71C3: je          00000001401A7258
+401A71C9: nop         dword ptr [rax+0000000000000000h]
+401A71D0: mov         rdx,rbp
+401A71D3: mov         rcx,rsi
+401A71D6: call        0000000140084F30
+401A71DB: test        al,al
+401A71DD: jne         00000001401A71EF
+401A71DF: add         rsi,30h
+401A71E3: mov         qword ptr [rsp+60h],rsi
+401A71E8: cmp         rsi,rbx
+401A71EB: jne         00000001401A71D0
+401A71ED: jmp         00000001401A7258
+401A71EF: mov         rax,qword ptr [rsp+40h]
+401A71F4: lea         rdi,[rax+rax*2]
+401A71F8: shl         rdi,4
+401A71FC: mov         rbx,qword ptr [rsp+38h]
+401A7201: add         rdi,rbx
+401A7204: cmp         rbx,rdi

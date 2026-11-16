@@ -1,0 +1,255 @@
+80018900: mov         qword ptr [rsp+8],rbx
+80018905: push        rbp
+80018906: push        rsi
+80018907: push        rdi
+80018908: push        r12
+8001890A: push        r13
+8001890C: push        r14
+8001890E: push        r15
+80018910: lea         rbp,[rsp+FFFFFFFFFFFFFF10h]
+80018918: sub         rsp,1F0h
+8001891F: mov         rax,qword ptr [00000001800AD100h]
+80018926: xor         rax,rsp
+80018929: mov         qword ptr [rbp+00000000000000E0h],rax
+80018930: mov         rbx,r9
+80018933: mov         r15d,r8d
+80018936: mov         dword ptr [rsp+30h],r8d
+8001893B: mov         rdi,qword ptr [00000001800B0B80h]
+80018942: test        rdx,rdx
+80018945: jne         000000018001894E
+80018947: xor         al,al
+80018949: jmp         0000000180018DE5
+8001894E: xorps       xmm0,xmm0
+80018951: movups      xmmword ptr [rbp-60h],xmm0
+80018955: xor         esi,esi
+80018957: mov         qword ptr [rbp-50h],rsi
+8001895B: mov         qword ptr [rbp-48h],rsi
+8001895F: mov         r13,0FFFFFFFFFFFFFFFFh
+80018966: mov         r8,r13
+80018969: nop         dword ptr [rax+0000000000000000h]
+80018970: inc         r8
+80018973: cmp         byte ptr [rdx+r8],sil
+80018977: jne         0000000180018970
+80018979: lea         rcx,[rbp-60h]
+8001897D: call        000000018000E850
+80018982: nop
+80018983: xorps       xmm0,xmm0
+80018986: movups      xmmword ptr [rbp-40h],xmm0
+8001898A: mov         qword ptr [rbp-30h],rsi
+8001898E: mov         qword ptr [rbp-28h],rsi
+80018992: mov         r8,r13
+80018995: inc         r8
+80018998: cmp         byte ptr [rbx+r8],0
+8001899D: jne         0000000180018995
+8001899F: mov         rdx,rbx
+800189A2: lea         rcx,[rbp-40h]
+800189A6: call        000000018000E850
+800189AB: nop
+800189AC: lea         rdx,[rbp-60h]
+800189B0: cmp         qword ptr [rbp-48h],0Fh
+800189B5: cmova       rdx,qword ptr [rbp-60h]
+800189BA: mov         rcx,rdi
+800189BD: call        000000018001B440
+800189C2: mov         qword ptr [rsp+58h],rax
+800189C7: test        rax,rax
+800189CA: je          0000000180018D6D
+800189D0: xorps       xmm1,xmm1
+800189D3: movdqu      xmmword ptr [rbp-78h],xmm1
+800189D8: mov         qword ptr [rbp-68h],rsi
+800189DC: lea         rdx,[rbp-40h]
+800189E0: lea         rcx,[rsp+60h]
+800189E5: call        000000018000EC70
+800189EA: lea         r8,[rbp-78h]
+800189EE: mov         rcx,rax
+800189F1: call        000000018000B0B0
+800189F6: mov         r12,qword ptr [rbp-70h]
+800189FA: sub         r12,qword ptr [rbp-78h]
+800189FE: sar         r12,5
+80018A02: mov         edi,4
+80018A07: cmp         r12d,edi
+80018A0A: cmovg       r12d,edi
+80018A0E: mov         qword ptr [rsp+38h],r12
+80018A13: movsxd      rbx,r12d
+80018A16: mov         eax,edi
+80018A18: mul         rax,rbx
+80018A1B: cmovb       rax,r13
+80018A1F: mov         rcx,rax
+80018A22: call        0000000180061050
+80018A27: mov         rsi,rax
+80018A2A: mov         qword ptr [rsp+48h],rax
+80018A2F: mov         eax,edi
+80018A31: mul         rax,rbx
+80018A34: cmovb       rax,r13
+80018A38: mov         rcx,rax
+80018A3B: call        0000000180061050
+80018A40: mov         r14,rax
+80018A43: mov         qword ptr [rsp+50h],rax
+80018A48: mov         eax,edi
+80018A4A: mul         rax,rbx
+80018A4D: cmovb       rax,r13
+80018A51: mov         rcx,rax
+80018A54: call        0000000180061050
+80018A59: mov         rdi,rax
+80018A5C: mov         qword ptr [rsp+40h],rax
+80018A61: lea         rbx,[rbx*4+0000000000000000h]
+80018A69: mov         r8,rbx
+80018A6C: xor         edx,edx
+80018A6E: mov         rcx,rsi
+80018A71: call        0000000180087230
+80018A76: mov         r8,rbx
+80018A79: xor         edx,edx
+80018A7B: mov         rcx,r14
+80018A7E: call        0000000180087230
+80018A83: mov         r8,rbx
+80018A86: xor         edx,edx
+80018A88: mov         rcx,rdi
+80018A8B: call        0000000180087230
+80018A90: xor         edx,edx
+80018A92: mov         r8d,0F8h
+80018A98: lea         rcx,[rbp-20h]
+80018A9C: call        0000000180087230
+80018AA1: lea         rcx,[rbp-20h]
+80018AA5: call        000000018000BBC0
+80018AAA: nop
+80018AAB: lea         rdx,[000000018009A4E0h]
+80018AB2: lea         rcx,[rbp-10h]
+80018AB6: call        0000000180031E80
+80018ABB: mov         edx,r15d
+80018ABE: mov         rcx,rax
+80018AC1: call        000000018002E690
+80018AC6: mov         rcx,rax
+80018AC9: lea         rdx,[000000018009A4A0h]
+80018AD0: call        0000000180031E80
+80018AD5: test        r12d,r12d
+80018AD8: jle         0000000180018CDE
+80018ADE: xor         r15d,r15d
+80018AE1: xor         r12d,r12d
+80018AE4: mov         rdi,rsi
+80018AE7: mov         r13,r14
+80018AEA: sub         r13,rsi
+80018AED: nop         dword ptr [rax]
+80018AF0: mov         rax,qword ptr [rbp-70h]
+80018AF4: mov         rcx,qword ptr [rbp-78h]
+80018AF8: sub         rax,rcx
+80018AFB: sar         rax,5
+80018AFF: cmp         rax,r15
+80018B02: jbe         0000000180018E35
+80018B08: lea         rdx,[rcx+r12]
+80018B0C: mov         r8,qword ptr [rdx+10h]
+80018B10: test        r8,r8
+80018B13: je          0000000180018CAA
+80018B19: cmp         qword ptr [rdx+18h],0Fh
+80018B1E: jbe         0000000180018B23
+80018B20: mov         rdx,qword ptr [rdx]
+80018B23: lea         rcx,[00000001800AF4B0h]
+80018B2A: call        000000018000C740
+80018B2F: mov         rcx,rax
+80018B32: call        0000000180032130
+80018B37: mov         rax,qword ptr [rbp-70h]
+80018B3B: mov         rcx,qword ptr [rbp-78h]
+80018B3F: sub         rax,rcx
+80018B42: sar         rax,5
+80018B46: cmp         rax,r15
+80018B49: jbe         0000000180018E35
+80018B4F: lea         rsi,[rcx+r12]
+80018B53: call        000000018006C794
+80018B58: mov         r14,rax
+80018B5B: cmp         qword ptr [rsi+18h],0Fh
+80018B60: jbe         0000000180018B65
+80018B62: mov         rsi,qword ptr [rsi]
+80018B65: mov         dword ptr [rax],0
+80018B6B: mov         r8d,10h
+80018B71: lea         rdx,[rbp-80h]
+80018B75: mov         rcx,rsi
+80018B78: call        000000018006C558
+80018B7D: mov         ebx,eax
+80018B7F: cmp         rsi,qword ptr [rbp-80h]
+80018B83: je          0000000180018E28
+80018B89: cmp         dword ptr [r14],22h
+80018B8D: je          0000000180018E1B
+80018B93: cmp         eax,106h
+80018B98: ja          0000000180018CAA
+80018B9E: mov         dword ptr [rdi+r13],2
+80018BA6: mov         dword ptr [rdi],eax
+80018BA8: cmp         eax,2
+80018BAB: jne         0000000180018BBA
+80018BAD: mov         dword ptr [rdi+r13],13h
+80018BB5: jmp         0000000180018C68
+80018BBA: add         eax,0FFFFFF20h
+80018BBF: cmp         eax,7
+80018BC2: ja          0000000180018C53
+80018BC8: mov         dword ptr [rdi+r13],3
+80018BD0: cmp         ebx,0E0h
+80018BD6: jne         0000000180018BE3
+80018BD8: mov         dword ptr [rdi],1
+80018BDE: jmp         0000000180018C68
+80018BE3: cmp         ebx,0E1h
+80018BE9: jne         0000000180018BF3
+80018BEB: mov         dword ptr [rdi],2
+80018BF1: jmp         0000000180018C68
+80018BF3: cmp         ebx,0E2h
+80018BF9: jne         0000000180018C03
+80018BFB: mov         dword ptr [rdi],4
+80018C01: jmp         0000000180018C68
+80018C03: cmp         ebx,0E3h
+80018C09: jne         0000000180018C13
+80018C0B: mov         dword ptr [rdi],8
+80018C11: jmp         0000000180018C68
+80018C13: cmp         ebx,0E4h
+80018C19: jne         0000000180018C23
+80018C1B: mov         dword ptr [rdi],10h
+80018C21: jmp         0000000180018C68
+80018C23: cmp         ebx,0E5h
+80018C29: jne         0000000180018C33
+80018C2B: mov         dword ptr [rdi],20h
+80018C31: jmp         0000000180018C68
+80018C33: cmp         ebx,0E6h
+80018C39: jne         0000000180018C43
+80018C3B: mov         dword ptr [rdi],40h
+80018C41: jmp         0000000180018C68
+80018C43: cmp         ebx,0E7h
+80018C49: jne         0000000180018C68
+80018C4B: mov         dword ptr [rdi],80h
+80018C51: jmp         0000000180018C68
+80018C53: lea         eax,[rbx+FFFFFFFFFFFFFF00h]
+80018C59: cmp         eax,6
+80018C5C: ja          0000000180018C68
+80018C5E: mov         dword ptr [rdi+r13],7
+80018C66: mov         dword ptr [rdi],eax
+80018C68: lea         rdx,[000000018009A50Ch]
+80018C6F: lea         rcx,[rbp-10h]
+80018C73: call        0000000180031E80
+80018C78: mov         edx,ebx
+80018C7A: mov         rcx,rax
+80018C7D: call        000000018002E690
+80018C82: mov         rcx,rax
+80018C85: lea         rdx,[000000018009A4D4h]
+80018C8C: call        0000000180031E80
+80018C91: mov         edx,dword ptr [rdi]
+80018C93: mov         rcx,rax
+80018C96: call        000000018002E690
+80018C9B: mov         rcx,rax
+80018C9E: lea         rdx,[000000018009A4D0h]
+80018CA5: call        0000000180031E80
+80018CAA: inc         r15
+80018CAD: add         r12,20h
+80018CB1: add         rdi,4
+80018CB5: mov         rax,qword ptr [rsp+38h]
+80018CBA: cdqe
+80018CBC: cmp         r15,rax
+80018CBF: jl          0000000180018AF0
+80018CC5: mov         rsi,qword ptr [rsp+48h]
+80018CCA: mov         r14,qword ptr [rsp+50h]
+80018CCF: mov         rdi,qword ptr [rsp+40h]
+80018CD4: mov         r15d,dword ptr [rsp+30h]
+80018CD9: mov         r12,qword ptr [rsp+38h]
+80018CDE: mov         qword ptr [rsp+28h],rdi
+80018CE3: mov         qword ptr [rsp+20h],rsi
+80018CE8: mov         r9,r14
+80018CEB: mov         r8d,r12d
+80018CEE: mov         edx,r15d
+80018CF1: mov         rcx,qword ptr [rsp+58h]
+80018CF6: call        000000018003BC70
+80018CFB: mov         rcx,rsi
+80018CFE: call        0000000180060FE0
+80018D03: mov         rcx,r14

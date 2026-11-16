@@ -1,0 +1,141 @@
+getAudioChannelSize 
+getAudioSampleRate 
+getAudioSampleSize 
+getConnectedDeviceCount 
+getConnectionMode 
+getDeviceAIButtonFunc 
+getDeviceActive type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceAirMouseStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceAllDpi type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+getDeviceAnnotationStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceAudioButtonSystemMode type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDeviceBattery type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1 
+getDeviceBrightness type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1 
+getDeviceButtonFunc type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDeviceButtonParam type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+getDeviceButtonShortcutFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+getDeviceButtonShortcutFunction2 type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+getDeviceButtonShortcutFunction3 type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceChargingStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1 
+getDeviceCurrentCursorFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceCursorFunctionDpi type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceCursorFunctionStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceDialMiniLedParams type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceDialNeoIndicatorLightBreatheEnable type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceDigitalLaserStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceFlashId type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceHardwareVersion type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceHooksMode type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceId 
+getDeviceIndicatorLightAllParams type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+getDeviceKeyPageDownLongPressFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceKeyPageUpLongPressFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceLedEffect type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDeviceMacAddress type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None
+getDeviceMagnifierGlassStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceMicGainParam type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceMicNRLevel type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceMicrophoneEnable type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceMotorStrength type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDeviceMotorVibrationParams type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceMuteEnableStatus type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceMuteMode type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceName type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None
+getDevicePhysicalLaserStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceProductId 
+getDeviceReportRate type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDeviceSN type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceScreenShutdownTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceSleepTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getDeviceSpotlightStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceStandbyStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4 
+getDeviceStandbyTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceSupportButtonFunc type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+getDeviceSupportCursorFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getDeviceSupportLedEffect type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+getDeviceSupportMicrophone type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4 
+getDeviceUUID type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+getDeviceVendorId 
+getDeviceVersion type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDeviceWheelEnableStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+getDeviceWheelLevel type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+getDongleFlashId type=1 grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDongleSN type=1 grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getDongleVersion type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+getExpertMouseSWStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+getHeadphoneJackMode type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+getKeyboardIQSKeyPressPressureValue type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+getKeyboardIQSKeyReleasePressureValue type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+getSdkVersion type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None
+isDeviceActive 
+isDeviceExists 
+registerDeviceAudioDataCallbackListener 
+registerDeviceConnectedCallbackListener 
+registerDeviceDisconnectedCallbackListener 
+registerDeviceErrorCallbackListener 
+registerDeviceMessageCallbackListener 
+registerErrorCallbackListener 
+registerSystemBluetoothStatusCallbackListener 
+sdkInit type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None
+sdkQuit type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=None b3=None
+setDeviceAIButtonFunc 
+setDeviceAirMouseStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceAnnotationStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceAudioButtonSystemMode type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDeviceBrightness type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+setDeviceButtonFixedFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+setDeviceButtonFunc type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1  | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDeviceButtonShortcutFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4 
+setDeviceButtonShortcutFunction2 type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+setDeviceButtonShortcutFunction3 type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDeviceCursorFunctionDpi type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedBrightness type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedCurrentMode type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedHeartbeat type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedParams type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedWorkModeBreatheSpeed type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialMiniLedWorkModeType type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceDialNeoIndicatorLightBreatheEnable type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceDigitalLaserStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceDpi type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+setDeviceDynamicDpiRange type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+setDeviceHooksMode type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceIndicatorLightAllOnModeBrightnessLevel type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+setDeviceIndicatorLightCurrentMode type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+setDeviceIndicatorLightWorkModeAlwaysOnBrightnessLevel type=None grp=1 cmd=0x1 b3=None | type=6 grp=1 cmd=0x23 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceIndicatorLightWorkModeBreatheBrightnessLevel type=None grp=1 cmd=0x1 b3=None | type=6 grp=1 cmd=0x23 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceIndicatorLightWorkModeBreatheLevel type=None grp=1 cmd=0x1 b3=None | type=6 grp=1 cmd=0x23 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceIndicatorLightWorkModeTime type=None grp=1 cmd=0x1 b3=None | type=6 grp=1 cmd=0x23 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceIndicatorLightWorkModeType type=None grp=1 cmd=0x1 b3=None | type=6 grp=1 cmd=0x23 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceKeyPageDownLongPressFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceKeyPageUpLongPressFunction type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceLedEffect type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+setDeviceMagnifierGlassStatus type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceMicGainParam type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceMicNRLevel type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceMicrophoneEnable type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+setDeviceMicrophoneUIFlickMode type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4 
+setDeviceMotorStrength type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDeviceMotorVibrationParams type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceMuteEnableStatus type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceMuteMode type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=0x6 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDevicePhysicalLaserStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceReboot type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDeviceReportRate type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDeviceSN type=1 grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1 
+setDeviceScreenShutdownTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+setDeviceSleepTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh 
+setDeviceSpotlightStatus type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+setDeviceStandbyTime type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0xe b3=and 0FEh or 4 
+setDeviceUUID type=1 grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xb b3=or 1 
+setDeviceWheelLevel type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xe b3=and 0FEh or 4  | type=1 grp=1 cmd=0x91 b3=and 0FEh or 4  | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2  | type=1 grp=1 cmd=0x90 b3=and 0FEh or 4 
+setDongleReboot type=None grp=1 cmd=0x6 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setDongleSN type=1 grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x2a b3=and 0FEh  | type=1 grp=1 cmd=0x2c b3=and 0FEh or 2  | type=1 grp=1 cmd=0xb b3=or 1  | type=None grp=1 cmd=0x1 b3=None | type=None grp=1 cmd=None b3=None | type=1 grp=1 cmd=0xa b3=or 1  | type=1 grp=1 cmd=0x42 b3=and 0FEh or 2 
+setExpertMouseSWStatus type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+setHeadphoneJackMode type=None grp=1 cmd=0x6 b3=None | type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0xf b3=and 0FEh or 4  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+setKeyboardIQSKeyPressPressureValue type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+setKeyboardIQSKeyReleasePressureValue type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=1 grp=1 cmd=0x43 b3=and 0FEh or 4  | type=1 grp=1 cmd=0x44 b3=and 0FEh  | type=6 grp=1 cmd=0x23 b3=and 0FEh 
+startDeviceUpgrade type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+startDongleUpgrade type=None grp=1 cmd=0x1 b3=None | type=1 grp=1 cmd=0x10 b3=and 0FEh 
+stopDeviceUpgrade type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None
+stopDongleUpgrade type=1 grp=1 cmd=0x10 b3=and 0FEh  | type=None grp=1 cmd=0x1 b3=None

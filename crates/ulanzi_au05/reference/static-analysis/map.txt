@@ -1,0 +1,134 @@
+getAudioChannelSize || 
+getSdkVersion || 
+sdkInit || 
+sdkQuit || 
+getConnectedDeviceCount || 
+getDeviceName || 
+getDeviceMacAddress || 
+getDeviceVendorId || 
+getDeviceProductId || 
+isDeviceExists || 
+isDeviceActive || 
+getDeviceId || 
+getConnectionMode || 
+getAudioSampleRate || 
+getAudioSampleSize || 
+getDongleVersion || 
+getDongleFlashId || 
+getDeviceActive || 
+getDeviceFlashId || 
+getDeviceVersion || 
+getDongleSN || 0x180014aa0: type=0x06 cls=0x02 cmd=0x81 b3=0x01  []
+setDongleSN || 
+getDeviceSN || 
+setDeviceSN || 
+getDeviceUUID || 
+setDeviceUUID || 
+getDeviceBattery || 
+getDeviceChargingStatus || 
+getDeviceBrightness || 
+setDeviceBrightness || 0x180015390: type=0x01 cls=0x06 cmd=0x20 b3=0x04 p4:b=sil []
+getDeviceAllDpi || 
+setDeviceDpi || 
+setDeviceDynamicDpiRange || 
+getDeviceAIButtonFunc || 
+setDeviceAIButtonFunc || 
+getDeviceButtonFunc || 0x180015830: type=0x01 cls=0x06 cmd=0x10 b3=0x05 p4:b=r14b p5:b=sil []
+setDeviceButtonFunc || 
+getDeviceReportRate || 
+setDeviceReportRate || 0x180015a80: type=0x01 cls=0x06 cmd=0x0d b3=0x00 p4:b=sil []
+getDeviceLedEffect || 0x180015cd0: type=0x01 cls=0x06 cmd=0x11 b3=0x01 p4:b=r14b p5:b=sil []
+setDeviceLedEffect || 
+getDeviceScreenShutdownTime || 
+setDeviceScreenShutdownTime || 0x1800155e0: type=0x01 cls=0x06 cmd=0x22 b3=0x04 p4:d=esi []
+getDeviceMicrophoneEnable || 
+setDeviceMicrophoneEnable || 0x180015f20: type=0x01 cls=0x01 cmd=0x2a b3=0x00 p4:b=sil []
+getDeviceStandbyTime || 
+setDeviceStandbyTime || 0x180016170: type=0x01 cls=0x01 cmd=0x2c b3=0x02 p4:d=esi []
+getDeviceStandbyStatus || 
+setDeviceMicrophoneUIFlickMode || 0x1800163c0: type=0x01 cls=0x06 cmd=0x24 b3=0x00 p4:b=sil []
+getDeviceSupportMicrophone || 
+getDeviceSupportButtonFunc || 
+getDeviceSupportLedEffect || 
+getDeviceButtonParam || 0x1800181c0: type=0x01 cls=0x06 cmd=0x10 b3=0x01 p5:b=sil []
+setDeviceButtonFixedFunction || 
+getDeviceButtonShortcutFunction || 
+setDeviceButtonShortcutFunction || 
+getDeviceButtonShortcutFunction2 || 
+setDeviceButtonShortcutFunction2 || 
+getDeviceButtonShortcutFunction3 || 
+setDeviceButtonShortcutFunction3 || 
+getDeviceAudioButtonSystemMode || 
+setDeviceAudioButtonSystemMode || 0x1800193d0: type=0x01 cls=0x06 cmd=0x51 b3=0x04 p4:b=sil []
+getDeviceMotorStrength || 
+setDeviceMotorStrength || 0x180019620: type=0x01 cls=0x06 cmd=0x40 b3=0x04 p4:b=sil []
+getDeviceWheelLevel || 
+setDeviceWheelLevel || 0x180019870: type=0x01 cls=0x06 cmd=0x42 b3=0x00 p4:b=sil []
+getDeviceHardwareVersion || 
+getDeviceSleepTime || 
+setDeviceSleepTime || 0x180016610: type=0x01 cls=0x01 cmd=0x42 b3=0x02 p4:d=esi []
+getDeviceMicNRLevel || 
+setDeviceMicNRLevel || 
+getDeviceMicGainParam || 
+setDeviceMicGainParam || 
+getDeviceHooksMode || 
+setDeviceHooksMode || 0x180019ac0: type=0x01 cls=0x0b cmd=0x89 b3=0x04 p4:b=sil []
+getDeviceMuteMode || 
+setDeviceMuteMode || 0x180019d10: type=0x01 cls=0x01 cmd=0x0e b3=0x04 p4:b=sil []
+getDeviceMuteEnableStatus || 
+setDeviceMuteEnableStatus || 0x180019f60: type=0x01 cls=0x01 cmd=0x91 b3=0x04 p4:b=sil []
+getHeadphoneJackMode || 
+setHeadphoneJackMode || 0x18001a1b0: type=0x01 cls=0x01 cmd=0x0f b3=0x04 p4:b=sil []
+setDongleReboot || 
+setDeviceReboot || 
+startDongleUpgrade || 
+stopDongleUpgrade || 0x180035640: type=0x01 cls=0x00 cmd=0x0d b3=0x00  []
+startDeviceUpgrade || 
+stopDeviceUpgrade || 0x180035640: type=0x01 cls=0x00 cmd=0x0d b3=0x00  []
+getDeviceCursorFunctionDpi || 
+setDeviceCursorFunctionDpi || 0x180016f20: type=0x01 cls=0x07 cmd=0x09 b3=0x04 p4:b=sil p5:b=sil p6:b=sil p7:b=sil []
+getDeviceMotorVibrationParams || 
+setDeviceMotorVibrationParams || 
+getDeviceSupportCursorFunction || 
+getDeviceCursorFunctionStatus || 
+getDeviceCurrentCursorFunction || 
+getDeviceSpotlightStatus || 
+setDeviceSpotlightStatus || 0x180017180: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=r14b p5:b=sil []
+getDeviceMagnifierGlassStatus || 
+setDeviceMagnifierGlassStatus || 0x1800173d0: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=1 p5:b=sil []
+getDeviceDigitalLaserStatus || 
+setDeviceDigitalLaserStatus || 0x180017620: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=2 p5:b=sil []
+getDevicePhysicalLaserStatus || 
+setDevicePhysicalLaserStatus || 0x180017870: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=4 p5:b=sil []
+getDeviceAnnotationStatus || 
+setDeviceAnnotationStatus || 0x180017ac0: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=8 p5:b=sil []
+getDeviceAirMouseStatus || 
+setDeviceAirMouseStatus || 0x180017d10: type=0x01 cls=0x07 cmd=0x1b b3=0x04 p4:b=9 p5:b=sil []
+getDeviceKeyPageUpLongPressFunction || 
+setDeviceKeyPageUpLongPressFunction || 
+getDeviceKeyPageDownLongPressFunction || 
+setDeviceKeyPageDownLongPressFunction || 
+getKeyboardIQSKeyPressPressureValue || 
+setKeyboardIQSKeyPressPressureValue || 
+getKeyboardIQSKeyReleasePressureValue || 
+setKeyboardIQSKeyReleasePressureValue || 
+getExpertMouseSWStatus || 
+setExpertMouseSWStatus || 0x180017f60: type=0x01 cls=0x01 cmd=0x10 b3=0x00 p4:b=al []
+getDeviceWheelEnableStatus || 
+getDeviceIndicatorLightAllParams || 
+setDeviceIndicatorLightCurrentMode || 0x18001a400: type=0x01 cls=0x0b cmd=0x88 b3=0x04 p4:b=1 p6:b=sil [] / type=0x88 cls=0x04 cmd=0x01 b3=0x00 p4:b=sil []
+setDeviceIndicatorLightAllOnModeBrightnessLevel || 0x18001a650: type=0x01 cls=0x0b cmd=0x88 b3=0x04 p4:b=2 p7:b=sil [] / type=0x88 cls=0x04 cmd=0x02 b3=0x00 p5:b=sil []
+setDeviceIndicatorLightWorkModeType || 
+setDeviceIndicatorLightWorkModeTime || 
+setDeviceIndicatorLightWorkModeBreatheLevel || 
+setDeviceIndicatorLightWorkModeBreatheBrightnessLevel || 
+setDeviceIndicatorLightWorkModeAlwaysOnBrightnessLevel || 
+getDeviceDialNeoIndicatorLightBreatheEnable || 
+setDeviceDialNeoIndicatorLightBreatheEnable || 
+getDeviceDialMiniLedParams || 
+setDeviceDialMiniLedParams || 
+setDeviceDialMiniLedCurrentMode || 0x18001a8a0: type=0x01 cls=0x01 cmd=0x43 b3=0x04 p4:b=r14b p5:b=sil []
+setDeviceDialMiniLedWorkModeType || 0x18001aaf0: type=0x01 cls=0x01 cmd=0x43 b3=0x04 p4:b=1 p6:b=sil [] / type=0x43 cls=0x04 cmd=0x01 b3=0x00 p4:b=sil []
+setDeviceDialMiniLedWorkModeBreatheSpeed || 0x18001ad40: type=0x01 cls=0x01 cmd=0x43 b3=0x04 p4:b=2 p7:b=sil [] / type=0x43 cls=0x04 cmd=0x02 b3=0x00 p5:b=sil []
+setDeviceDialMiniLedBrightness || 0x18001af90: type=0x01 cls=0x01 cmd=0x43 b3=0x04 p4:b=3 p8:b=sil [] / type=0x43 cls=0x04 cmd=0x03 b3=0x00 p6:b=sil []
+setDeviceDialMiniLedHeartbeat || 0x18001b1e0: type=0x01 cls=0x01 cmd=0x44 b3=0x00 p4:b=cl []

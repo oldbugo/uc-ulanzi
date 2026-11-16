@@ -315,6 +315,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "ulanzi_au05"
+version = "0.0.0"
+dependencies = [
+ "windows-sys",
+]
+
+[[package]]
 name = "ulanzi_dock"
 version = "0.0.0"
 dependencies = [
