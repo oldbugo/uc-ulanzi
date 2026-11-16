@@ -102,7 +102,7 @@ fn events_decode_through_the_encrypted_channel() {
             (Control::KnobLeft, 0x73, false)
         ]
     );
-    assert_eq!(h.lock().typed, vec!["F22".to_string()]);
+    assert_eq!(h.lock().typed, vec!["F22".to_string(), "scroll up".to_string()], "the knob turn types its factory scroll");
 }
 
 #[test]
