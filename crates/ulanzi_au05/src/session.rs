@@ -21,6 +21,15 @@ pub trait Transport: Send {
     fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>>;
 }
 
+impl<T: Transport + ?Sized> Transport for Box<T> {
+    fn write(&mut self, report: &Report, timeout: Duration) -> io::Result<()> {
+        (**self).write(report, timeout)
+    }
+    fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>> {
+        (**self).read(timeout)
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct SessionConfig {
     pub write_timeout: Duration,
