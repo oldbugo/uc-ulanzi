@@ -211,12 +211,20 @@ fn answer(s: &mut FakeState, p: &[u8; PLAIN_LEN]) -> Option<Vec<u8>> {
             match p[4] {
                 1 => s.light.mode = p[6],
                 2 => s.light.brightness = p[7],
-                4 if p[5] <= 3 => s.light.records[p[5] as usize][0] = p[8],
+                m if p[5] <= 3 && protocol::LightField::from_mask(m).is_some() => {
+                    let f = protocol::LightField::from_mask(m).unwrap().index() as usize;
+                    let at = 8 + 5 * p[5] as usize + f;
+                    s.light.records[p[5] as usize][f] = p[at];
+                }
                 _ => return None,
             }
             [head(4), p[4..9].to_vec()].concat()
         }
         (0x0b, 0x89, 0x01) => [head(1), vec![s.hooks_mode]].concat(),
+        (0x0b, 0x89, 0x04) if p[4] <= 1 => {
+            s.hooks_mode = p[4];
+            [head(4), vec![p[4]]].concat()
+        }
         (0x01, 0x90, 0x01) => {
             let mut v = head(1);
             v.push(s.mic.level);

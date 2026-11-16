@@ -220,16 +220,16 @@ fn a_write_that_does_not_finish_is_never_retried_and_repeated_stalls_suspend() {
 }
 
 #[test]
-fn a_real_key_session_refuses_unchecked_commands() {
+fn a_real_key_session_accepts_every_known_command() {
+    // User request 2026-11-16: every known setting may be tried on the real key (labelled "Untested").
     let (t, h) = fake_au05();
     h.lock().act_like_real = true;
     let mut s = Session::new(t, SessionConfig { real_key: true, ..quick() });
-    assert_eq!(s.submit(1, Request::SetSleepTime(SleepTime::new(0).unwrap())), Err(Failure::Unverified));
-    assert_eq!(s.submit(2, Request::GetKeyTyping(KeyId::KnobPress)), Err(Failure::Unverified));
-    assert_eq!(
-        s.submit(3, Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 })),
-        Err(Failure::Unverified)
-    );
+    assert!(s.submit(1, Request::SetSleepTime(SleepTime::new(0).unwrap())).is_ok());
+    assert!(s.submit(2, Request::GetKeyTyping(KeyId::KnobPress)).is_ok());
+    assert!(s.submit(3, Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 })).is_ok());
+    assert!(s.submit(5, Request::SetStandbyTime(5)).is_err(), "ranges still apply");
+    s.cancel_queued(|_, _| true);
     h.wake();
     s.submit(4, Request::SetStandbyTime(600)).unwrap();
     let out = run_until(&mut s, 4, Duration::from_secs(1));

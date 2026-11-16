@@ -7,7 +7,9 @@
 //!
 //! Evidence labels (vault page "Ulanzi AU05 Vibe Key facts", 2026-11-16): every get here was answered by the
 //! real key; of the sets, only standby time and key typing were sent to the real key and read back.
-//! [`Request::verified_on_hardware`] records that, so the app can refuse the other sets on a real key.
+//! [`Request::verified_on_hardware`] records that; the app labels the others "Untested". Since 2026-11-16
+//! (user request: "expose all the parameters in the app so I can test it out all at once") every known
+//! command may be sent to a real key ([`Request::allowed_on_real_key`]); the never-send list is unchanged.
 use crate::tea;
 
 pub const VENDOR_ID: u16 = 0xfff1;
@@ -471,6 +473,43 @@ pub struct LightState {
 pub const LIGHT_MODE_MAX: u8 = 3;
 pub const LIGHT_BRIGHTNESS_MAX: u8 = 10;
 
+/// One field of a light mode record. The set mask is `0x04 << field` (0x04, 0x08, 0x10, 0x20, 0x40); the
+/// value goes where the light-all reply holds it: byte `8 + 5 * record + field` (static analysis).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LightField {
+    Type,
+    Time,
+    BreatheLevel,
+    BreatheBrightness,
+    AlwaysOnBrightness,
+}
+impl LightField {
+    pub const ALL: [LightField; 5] = [
+        LightField::Type,
+        LightField::Time,
+        LightField::BreatheLevel,
+        LightField::BreatheBrightness,
+        LightField::AlwaysOnBrightness,
+    ];
+    pub fn index(self) -> u8 {
+        self as u8
+    }
+    pub fn mask(self) -> u8 {
+        0x04 << self.index()
+    }
+    /// Value ranges UC accepts: type like the mode (0..3), time and breathe level 0..15, brightness 0..10.
+    pub fn max(self) -> u8 {
+        match self {
+            LightField::Type => LIGHT_MODE_MAX,
+            LightField::Time | LightField::BreatheLevel => 15,
+            LightField::BreatheBrightness | LightField::AlwaysOnBrightness => LIGHT_BRIGHTNESS_MAX,
+        }
+    }
+    pub fn from_mask(m: u8) -> Option<Self> {
+        Self::ALL.into_iter().find(|f| f.mask() == m)
+    }
+}
+
 /// Microphone noise reduction: a level and two u16 values of unknown meaning (read: 0, 100, 100).
 /// A set must write back the two values exactly as read.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -499,9 +538,12 @@ pub enum Request {
     GetLight,
     SetLightMode(u8),
     SetLightBrightness(u8),
-    /// Later: light follows Claude Code state. Record index 0..=3. Not used by UC yet.
-    SetWorkModeType { record: u8, kind: u8 },
+    /// One field of light mode record 0..=3 (mask 0x04..0x40). `SetLightRecord { field: Type, .. }` is the
+    /// "work-mode type" Studio sends for the Claude status light.
+    SetLightRecord { record: u8, field: LightField, value: u8 },
     GetHooksMode,
+    /// Hooks mode 0 or 1: `01 0b 89 04 <0|1>`.
+    SetHooksMode(u8),
     GetMicNr,
     SetMicNr(MicNr),
 }
@@ -517,7 +559,11 @@ impl Request {
             Request::SetKeyTyping(_, t) => t.validate(),
             Request::SetLightMode(m) if *m > LIGHT_MODE_MAX => Err("Light mode out of range".into()),
             Request::SetLightBrightness(b) if *b > LIGHT_BRIGHTNESS_MAX => Err("Light brightness out of range".into()),
-            Request::SetWorkModeType { record, .. } if *record > 3 => Err("Light record must be 0..3".into()),
+            Request::SetLightRecord { record, .. } if *record > 3 => Err("Light record must be 0..3".into()),
+            Request::SetLightRecord { field, value, .. } if *value > field.max() => {
+                Err("Light value out of range".into())
+            }
+            Request::SetHooksMode(m) if *m > 1 => Err("Hooks mode must be 0 or 1".into()),
             Request::SetMicNr(m) if m.level > MIC_NR_LEVEL_MAX => Err("Noise reduction level out of range".into()),
             _ => Ok(()),
         }
@@ -531,13 +577,20 @@ impl Request {
                 | Request::SetKeyTyping(..)
                 | Request::SetLightMode(_)
                 | Request::SetLightBrightness(_)
-                | Request::SetWorkModeType { .. }
+                | Request::SetLightRecord { .. }
+                | Request::SetHooksMode(_)
                 | Request::SetMicNr(_)
         )
     }
 
     /// True when this exact command was sent to the real key and its result checked (2026-11-16).
     /// All gets were answered; of the sets only standby time and key typing were checked.
+    /// May this be sent to a real key? Every known command (user request 2026-11-16); unchecked ones are
+    /// labelled "Untested" by the app. The never-send commands have no encoder at all.
+    pub fn allowed_on_real_key(&self) -> bool {
+        true
+    }
+
     pub fn verified_on_hardware(&self) -> bool {
         match self {
             Request::GetKeyTyping(KeyId::KnobPress) | Request::SetKeyTyping(KeyId::KnobPress, _) => false,
@@ -572,9 +625,14 @@ impl Request {
             Request::GetLight => vec![0x01, 0x0b, 0x88, 0x01],
             Request::SetLightMode(m) => vec![0x01, 0x0b, 0x88, 0x04, 0x01, 0x00, *m],
             Request::SetLightBrightness(b) => vec![0x01, 0x0b, 0x88, 0x04, 0x02, 0x00, 0x00, *b],
-            Request::SetWorkModeType { record, kind } => {
-                vec![0x01, 0x0b, 0x88, 0x04, 0x04, *record, 0x00, 0x00, *kind]
+            Request::SetLightRecord { record, field, value } => {
+                let at = 8 + 5 * *record as usize + field.index() as usize;
+                let mut v = vec![0u8; at + 1];
+                v[..6].copy_from_slice(&[0x01, 0x0b, 0x88, 0x04, field.mask(), *record]);
+                v[at] = *value;
+                v
             }
+            Request::SetHooksMode(m) => vec![0x01, 0x0b, 0x89, 0x04, *m],
             Request::GetHooksMode => vec![0x01, 0x0b, 0x89, 0x01],
             Request::GetMicNr => vec![0x01, 0x01, 0x90, 0x01],
             Request::SetMicNr(m) => {
@@ -635,9 +693,12 @@ impl Request {
             (0x0b, 0x88, 0x01) => Request::GetLight,
             (0x0b, 0x88, 0x04) if p[4] == 1 && p[5] == 0 => Request::SetLightMode(p[6]),
             (0x0b, 0x88, 0x04) if p[4] == 2 && p[5] == 0 && p[6] == 0 => Request::SetLightBrightness(p[7]),
-            (0x0b, 0x88, 0x04) if p[4] == 4 && p[6] == 0 && p[7] == 0 => {
-                Request::SetWorkModeType { record: p[5], kind: p[8] }
+            (0x0b, 0x88, 0x04) if LightField::from_mask(p[4]).is_some() && p[5] <= 3 => {
+                let field = LightField::from_mask(p[4])?;
+                let at = 8 + 5 * p[5] as usize + field.index() as usize;
+                Request::SetLightRecord { record: p[5], field, value: p[at] }
             }
+            (0x0b, 0x89, 0x04) => Request::SetHooksMode(p[4]),
             (0x0b, 0x89, 0x01) => Request::GetHooksMode,
             (0x01, 0x90, 0x01) => Request::GetMicNr,
             (0x01, 0x90, 0x04) => Request::SetMicNr(MicNr {
@@ -664,7 +725,7 @@ pub fn check_outgoing(report: &Report, real_key: bool) -> Result<Request, String
     let plain = decode_frame(report).ok_or("AU05 reports start with 0x55")?;
     let request = Request::from_plain(&plain).ok_or("Not an allowlisted AU05 command")?;
     request.validate()?;
-    if real_key && !request.verified_on_hardware() {
+    if real_key && !request.allowed_on_real_key() {
         return Err("Not checked on the real AU05".into());
     }
     Ok(request)
@@ -802,16 +863,23 @@ mod tests {
         assert_eq!(sleep.plain(), hex("01 01 42 02 20 1c 00 00"));
         assert_eq!(Request::SetLightMode(2).plain(), hex("01 0b 88 04 01 00 02"));
         assert_eq!(Request::SetLightBrightness(7).plain(), hex("01 0b 88 04 02 00 00 07"));
+        // Record 1 type: value at byte 8 + 5 = 13. Record 0 time (mask 0x08): byte 9.
         assert_eq!(
-            Request::SetWorkModeType { record: 1, kind: 2 }.plain(),
-            hex("01 0b 88 04 04 01 00 00 02")
+            Request::SetLightRecord { record: 1, field: LightField::Type, value: 2 }.plain(),
+            hex("01 0b 88 04 04 01 00 00 00 00 00 00 00 02")
         );
+        assert_eq!(
+            Request::SetLightRecord { record: 0, field: LightField::Time, value: 10 }.plain(),
+            hex("01 0b 88 04 08 00 00 00 00 0a")
+        );
+        assert_eq!(Request::SetHooksMode(1).plain(), hex("01 0b 89 04 01"));
         assert_eq!(Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 }).plain(), hex("01 01 90 04 01 64 00 64 00"));
         for r in [
             sleep,
             Request::SetLightMode(2),
             Request::SetLightBrightness(7),
-            Request::SetWorkModeType { record: 1, kind: 2 },
+            Request::SetLightRecord { record: 1, field: LightField::Type, value: 2 },
+            Request::SetHooksMode(1),
             Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 }),
         ] {
             assert!(!r.verified_on_hardware(), "{r:?}");
@@ -842,7 +910,8 @@ mod tests {
             Request::GetLight,
             Request::SetLightMode(0),
             Request::SetLightBrightness(0),
-            Request::SetWorkModeType { record: 0, kind: 0 },
+            Request::SetLightRecord { record: 3, field: LightField::AlwaysOnBrightness, value: 10 },
+            Request::SetHooksMode(0),
             Request::GetHooksMode,
             Request::GetMicNr,
             Request::SetMicNr(MicNr { level: 0, a: 100, b: 100 }),
@@ -870,14 +939,16 @@ mod tests {
             Request::GetLight,
             Request::SetLightMode(1),
             Request::SetLightBrightness(4),
-            Request::SetWorkModeType { record: 1, kind: 2 },
+            Request::SetLightRecord { record: 1, field: LightField::Type, value: 2 },
+            Request::SetLightRecord { record: 3, field: LightField::BreatheLevel, value: 15 },
+            Request::SetHooksMode(1),
             Request::GetHooksMode,
             Request::GetMicNr,
             Request::SetMicNr(MicNr { level: 1, a: 100, b: 100 }),
         ];
         for r in all {
             assert_eq!(check_outgoing(&r.frame(), false), Ok(r.clone()), "{r:?}");
-            assert_eq!(check_outgoing(&r.frame(), true).is_ok(), r.verified_on_hardware(), "{r:?}");
+            assert!(check_outgoing(&r.frame(), true).is_ok(), "every known command is allowed: {r:?}");
         }
         // Banned or unknown commands, out-of-range values, extra bytes and a non-zero tail are refused.
         for bad in [
