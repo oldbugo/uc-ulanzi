@@ -5,6 +5,12 @@ repository; the common project also includes `oldbugo/unified-control` (app),
 `oldbugo/coolerscreen` (cooler engine/app) and `oldbugo/ulanzi-toolkit` (existing
 Studio plugins). GitHub topic: `unified-control`. No organisation is required.
 
+## AU05 Vibe Key driver (2026-11-16, branch work)
+
+`crates/ulanzi_au05` drives the Ulanzi AU05 Vibe Key receiver's private channel: TEA framing, events,
+a command allowlist, a time-limited request session, an encrypted fake key and an opt-in Windows
+transport. Tested with the fake key only. See `crates/ulanzi_au05/README.md`.
+
 ## Status: step 1.1 driver implementation
 
 `crates/ulanzi_dock` provides protocol framing, page/partial-page ZIP builders,

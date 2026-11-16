@@ -1,0 +1,200 @@
+400C3FA0: mov         qword ptr [rsp+8],rbx
+400C3FA5: mov         qword ptr [rsp+18h],rsi
+400C3FAA: push        rbp
+400C3FAB: push        rdi
+400C3FAC: push        r12
+400C3FAE: push        r14
+400C3FB0: push        r15
+400C3FB2: lea         rbp,[rsp-2Fh]
+400C3FB7: sub         rsp,0B0h
+400C3FBE: mov         r14,r9
+400C3FC1: mov         r15d,r8d
+400C3FC4: mov         rsi,rdx
+400C3FC7: mov         rdi,rcx
+400C3FCA: mov         rdx,r9
+400C3FCD: lea         rcx,[rbp-19h]
+400C3FD1: call        qword ptr [00000001405E0F48h]
+400C3FD7: nop
+400C3FD8: lea         rdx,[00000001405EB10Ch]
+400C3FDF: lea         rcx,[rbp+17h]
+400C3FE3: call        qword ptr [00000001405E0F28h]
+400C3FE9: nop
+400C3FEA: xor         r9d,r9d
+400C3FED: xor         r8d,r8d
+400C3FF0: lea         rdx,[rbp+17h]
+400C3FF4: mov         r12,qword ptr [rbp+7Fh]
+400C3FF8: mov         rcx,r12
+400C3FFB: call        qword ptr [00000001405E0C00h]
+400C4001: mov         rbx,rax
+400C4004: lea         rcx,[rbp+17h]
+400C4008: call        qword ptr [00000001405E0F40h]
+400C400E: cmp         rbx,0FFFFFFFFFFFFFFFFh
+400C4012: je          00000001400C4075
+400C4014: call        00000001400D2A70
+400C4019: mov         r8,r14
+400C401C: lea         rdx,[rbp-1]
+400C4020: mov         rcx,rax
+400C4023: call        00000001400D2AF0
+400C4028: nop
+400C4029: mov         rdx,rax
+400C402C: lea         rcx,[rbp-39h]
+400C4030: call        00000001400EA230
+400C4035: mov         rdx,rax
+400C4038: lea         rcx,[rbp-19h]
+400C403C: call        qword ptr [00000001405E0F30h]
+400C4042: lea         rcx,[rbp-39h]
+400C4046: call        qword ptr [00000001405E0F40h]
+400C404C: nop
+400C404D: mov         rcx,qword ptr [rbp-1]
+400C4051: test        rcx,rcx
+400C4054: je          00000001400C4075
+400C4056: mov         eax,0FFFFFFFFh
+400C405B: lock xadd   dword ptr [rcx],eax
+400C405F: cmp         eax,1
+400C4062: jne         00000001400C4075
+400C4064: lea         edx,[rax+1]
+400C4067: lea         r8d,[rax+7]
+400C406B: mov         rcx,qword ptr [rbp-1]
+400C406F: call        qword ptr [00000001405E0F68h]
+400C4075: cmp         qword ptr [rsi+10h],0
+400C407A: je          00000001400C440D
+400C4080: cmp         qword ptr [rdi+00000000000000A8h],0
+400C4088: je          00000001400C440D
+400C408E: mov         r8,rsi
+400C4091: lea         rdx,[rbp-61h]
+400C4095: mov         rcx,rdi
+400C4098: call        00000001400C1980
+400C409D: nop
+400C409E: cmp         byte ptr [rbp-41h],0
+400C40A2: jne         00000001400C40F2
+400C40A4: lea         r9,[00000001405F6310h]
+400C40AB: mov         r8d,32Ah
+400C40B1: lea         rdx,[00000001405F5550h]
+400C40B8: lea         rcx,[rbp-39h]
+400C40BC: call        qword ptr [00000001405E0F88h]
+400C40C2: lea         rdx,[rbp+67h]
+400C40C6: mov         rcx,rax
+400C40C9: call        qword ptr [00000001405E0C80h]
+400C40CF: nop
+400C40D0: lea         rdx,[00000001405F63C0h]
+400C40D7: mov         rcx,rax
+400C40DA: call        qword ptr [00000001405E0EA0h]
+400C40E0: mov         rdx,rsi
+400C40E3: mov         rcx,rax
+400C40E6: call        qword ptr [00000001405E0E98h]
+400C40EC: nop
+400C40ED: jmp         00000001400C43A7
+400C40F2: call        0000000140354CA0
+400C40F7: mov         rdx,r14
+400C40FA: mov         rcx,rax
+400C40FD: call        000000014009DAF0
+400C4102: test        al,al
+400C4104: je          00000001400C4249
+400C410A: call        0000000140354CA0
+400C410F: mov         rdx,r14
+400C4112: mov         rcx,rax
+400C4115: call        0000000140354D80
+400C411A: mov         r12d,eax
+400C411D: mov         r9,qword ptr [rdi+0000000000000098h]
+400C4124: test        r9,r9
+400C4127: jne         00000001400C4183
+400C4129: lea         r9,[00000001405F6310h]
+400C4130: mov         r8d,333h
+400C4136: lea         rdx,[00000001405F5550h]
+400C413D: lea         rcx,[rbp-39h]
+400C4141: call        qword ptr [00000001405E0F88h]
+400C4147: lea         rdx,[rbp+67h]
+400C414B: mov         rcx,rax
+400C414E: call        qword ptr [00000001405E0F80h]
+400C4154: nop
+400C4155: lea         rdx,[00000001405F63F0h]
+400C415C: mov         rcx,rax
+400C415F: call        qword ptr [00000001405E0EA0h]
+400C4165: mov         rdx,rsi
+400C4168: mov         rcx,rax
+400C416B: call        qword ptr [00000001405E0E98h]
+400C4171: mov         edx,r15d
+400C4174: mov         rcx,rax
+400C4177: call        qword ptr [00000001405E0AE8h]
+400C417D: nop
+400C417E: jmp         00000001400C43A7
+400C4183: cmp         byte ptr [rbp-41h],0
+400C4187: je          00000001400C4499
+400C418D: lea         rcx,[rbp-61h]
+400C4191: cmp         qword ptr [rbp-49h],0Fh
+400C4196: cmova       rcx,qword ptr [rbp-61h]
+400C419B: mov         r8d,r12d
+400C419E: mov         edx,r15d
+400C41A1: call        r9
+400C41A4: movzx       ebx,al
+400C41A7: lea         r9,[00000001405F6310h]
+400C41AE: mov         r8d,33Ch
+400C41B4: lea         rdx,[00000001405F5550h]
+400C41BB: lea         rcx,[rbp-39h]
+400C41BF: call        qword ptr [00000001405E0F88h]
+400C41C5: lea         rdx,[rbp+67h]
+400C41C9: mov         rcx,rax
+400C41CC: call        qword ptr [00000001405E0C80h]
+400C41D2: nop
+400C41D3: lea         rdx,[00000001405F6440h]
+400C41DA: mov         rcx,rax
+400C41DD: call        qword ptr [00000001405E0EA0h]
+400C41E3: movzx       edx,bl
+400C41E6: mov         rcx,rax
+400C41E9: call        qword ptr [00000001405E0AF0h]
+400C41EF: lea         rdx,[00000001405F6468h]
+400C41F6: mov         rcx,rax
+400C41F9: call        qword ptr [00000001405E0EA0h]
+400C41FF: mov         edx,r15d
+400C4202: mov         rcx,rax
+400C4205: call        qword ptr [00000001405E0AE8h]
+400C420B: lea         rdx,[00000001405F6478h]
+400C4212: mov         rcx,rax
+400C4215: call        qword ptr [00000001405E0EA0h]
+400C421B: mov         rdx,r14
+400C421E: mov         rcx,rax
+400C4221: call        qword ptr [00000001405E0E98h]
+400C4227: lea         rdx,[00000001405F6488h]
+400C422E: mov         rcx,rax
+400C4231: call        qword ptr [00000001405E0EA0h]
+400C4237: mov         edx,r12d
+400C423A: mov         rcx,rax
+400C423D: call        qword ptr [00000001405E0AE8h]
+400C4243: nop
+400C4244: jmp         00000001400C43A7
+400C4249: lea         rdx,[00000001405EB10Ch]
+400C4250: lea         rcx,[rbp-1]
+400C4254: call        qword ptr [00000001405E0F28h]
+400C425A: nop
+400C425B: xor         r9d,r9d
+400C425E: xor         r8d,r8d
+400C4261: lea         rdx,[rbp-1]
+400C4265: mov         rcx,r12
+400C4268: call        qword ptr [00000001405E0C00h]
+400C426E: mov         rbx,rax
+400C4271: lea         rcx,[rbp-1]
+400C4275: call        qword ptr [00000001405E0F40h]
+400C427B: lea         rdx,[rbp-39h]
+400C427F: lea         rcx,[rbp-19h]
+400C4283: cmp         rbx,0FFFFFFFFFFFFFFFFh
+400C4287: je          00000001400C42C5
+400C4289: mov         rbx,qword ptr [rdi+00000000000000B8h]
+400C4290: call        qword ptr [00000001405E0760h]
+400C4296: nop
+400C4297: mov         rcx,rax
+400C429A: call        qword ptr [00000001405E0148h]
+400C42A0: cmp         byte ptr [rbp-41h],0
+400C42A4: je          00000001400C449F
+400C42AA: lea         rcx,[rbp-61h]
+400C42AE: cmp         qword ptr [rbp-49h],0Fh
+400C42B3: cmova       rcx,qword ptr [rbp-61h]
+400C42B8: mov         r8,rax
+400C42BB: mov         edx,r15d
+400C42BE: call        rbx
+400C42C0: movzx       ebx,al
+400C42C3: jmp         00000001400C42FF
+400C42C5: mov         rbx,qword ptr [rdi+00000000000000A8h]
+400C42CC: call        qword ptr [00000001405E0760h]
+400C42D2: nop
+400C42D3: mov         rcx,rax
+400C42D6: call        qword ptr [00000001405E0148h]

@@ -1,0 +1,110 @@
+0x180014aa0 -                                          hdr=06 02 81 01 
+0x180015390 -                                          hdr=01 06 20 04 pt4(b)=sil
+0x1800155e0 -                                          hdr=01 06 22 04 pt4(d)=esi
+0x180015830 -                                          hdr=01 06 10 05 pt4(b)=r14b pt5(b)=sil
+0x180015a80 -                                          hdr=01 06 0d 00 pt4(b)=sil
+0x180015cd0 -                                          hdr=01 06 11 01 pt4(b)=r14b pt5(b)=sil
+0x180015f20 -                                          hdr=01 01 2a 00 pt4(b)=sil
+0x180016170 -                                          hdr=01 01 2c 02 pt4(d)=esi
+0x1800163c0 -                                          hdr=01 06 24 00 pt4(b)=sil
+0x180016610 -                                          hdr=01 01 42 02 pt4(d)=esi
+0x180016f20 -                                          hdr=01 07 09 04 pt4(b)=sil pt5(b)=sil pt6(b)=sil pt7(b)=sil
+0x180017180 -                                          hdr=01 07 1b 04 pt4(b)=r14b pt5(b)=sil
+0x1800173d0 -                                          hdr=01 07 1b 04 pt4(b)=1 pt5(b)=sil
+0x180017620 -                                          hdr=01 07 1b 04 pt4(b)=2 pt5(b)=sil
+0x180017870 -                                          hdr=01 07 1b 04 pt4(b)=4 pt5(b)=sil
+0x180017ac0 -                                          hdr=01 07 1b 04 pt4(b)=8 pt5(b)=sil
+0x180017d10 -                                          hdr=01 07 1b 04 pt4(b)=9 pt5(b)=sil
+0x180017f60 -                                          hdr=01 01 10 00 pt4(b)=al
+0x1800181c0 -                                          hdr=01 06 10 01 pt5(b)=sil
+0x1800193d0 -                                          hdr=01 06 51 04 pt4(b)=sil
+0x180019620 -                                          hdr=01 06 40 04 pt4(b)=sil
+0x180019870 -                                          hdr=01 06 42 00 pt4(b)=sil
+0x180019ac0 -                                          hdr=01 0b 89 04 pt4(b)=sil
+0x180019d10 -                                          hdr=01 01 0e 04 pt4(b)=sil
+0x180019f60 -                                          hdr=01 01 91 04 pt4(b)=sil
+0x18001a1b0 -                                          hdr=01 01 0f 04 pt4(b)=sil
+0x18001a400 -                                          hdr=01 00 sil 00 
+0x18001a650 -                                          hdr=01 0b 88 04 pt4(b)=2 pt7(b)=sil
+0x18001a8a0 -                                          hdr=01 01 43 04 pt4(b)=r14b pt5(b)=sil
+0x18001aaf0 -                                          hdr=01 00 sil 00 
+0x18001ad40 -                                          hdr=01 01 43 04 pt4(b)=2 pt7(b)=sil
+0x18001af90 -                                          hdr=01 01 43 04 pt4(b)=3 pt8(b)=sil
+0x18001b1e0 -                                          hdr=01 01 44 00 pt4(b)=cl
+0x180035350 -                                          hdr=06 al 05 00 pt5(b)=r8b pt8(b)=al pt7(b)=al pt4(b)=cl pt6(b)=al
+0x180035420 -                                          hdr=01 00 0b 00 pt5(b)=cl pt4(b)=r8b pt14(w)=ax
+0x180035530 -                                          hdr=01 00 0a 00 pt4(b)=r8b pt5(b)=cl pt14(w)=ax
+0x180035640 -                                          hdr=01 01 0d 00 
+0x180035a30 -                                          hdr=01 01 10 00 pt4(b)=al
+0x180035ad0 -                                          hdr=01 06 50 01 pt4(b)=cl pt15(b)=dl
+0x180035cb0 -                                          hdr=01 01 34 01 
+0x180035d40 -                                          hdr=01 01 44 00 pt4(b)=cl
+0x1800380a0 -                                          hdr=01 06 12 04 pt4(b)=sil pt5(b)=r14b pt6(w)=r12w
+0x1800384f0 -                                          hdr=01 06 25 04 pt6(w)=r15w pt4(w)=si
+0x180038850 -                                          hdr=01 06 10 04 pt4(b)=bl pt5(b)=sil pt6(d)=r15d
+0x180038e90 -                                          hdr=01 01 0b 01 
+0x1800392f0 -                                          hdr=01 01 0a 01 
+0x180039720 -                                          hdr=01 06 11 04 pt4(b)=0 pt5(b)=dil pt6(b)=sil pt7(b)=r15b pt9(b)=r12b pt10(b)=r13b pt11(b)=al
+0x180039d90 -                                          hdr=01 01 90 04 pt4(b)=sil pt5(w)=r14w pt7(w)=r12w
+0x18003a1c0 -                                          hdr=01 03 15 04 pt4(b)=sil pt5(b)=r15b
+0x18003aa80 -                                          hdr=01 07 35 04 pt4(d)=esi pt8(b)=r15b
+0x18003add0 -                                          hdr=01 sil r15b 00 
+0x18003b130 -                                          hdr=01 07 33 04 pt4(b)=bl pt5(b)=sil pt6(b)=r15b
+0x18003b490 -                                          hdr=01 06 10 04 pt4(b)=bl pt5(b)=sil pt6(d)=r15d
+0x18003c560 -                                          hdr=01 0b 88 04 pt120(d)=eax pt124(w)=ax pt4(b)=4 pt5(b)=sil
+0x18003c910 -                                          hdr=01 0b 88 04 pt120(d)=eax pt124(w)=ax pt4(b)=8 pt5(b)=sil
+0x18003ccc0 -                                          hdr=01 0b 88 04 pt120(d)=eax pt124(w)=ax pt4(b)=10h pt5(b)=sil
+0x18003d070 -                                          hdr=01 0b 88 04 pt120(d)=eax pt124(w)=ax pt4(b)=20h pt5(b)=sil
+0x18003d420 -                                          hdr=01 0b 88 04 pt120(d)=eax pt124(w)=ax pt4(b)=40h pt5(b)=sil
+0x18003dc10 -                                          hdr=06 01 23 00 pt4(b)=1
+0x180044220 -                                          hdr=01 06 07 00 pt4(b)=al pt6(w)=ax
+0x18004b2dc getDongleVersion                           hdr=06 02 03 01 
+0x18004b56c getDongleFlashId                           hdr=06 02 0b 01 
+0x18004b867 getDeviceActive                            hdr=06 03 0a 01 
+0x18004ba9c getDeviceFlashId                           hdr=01 04 0b 01 
+0x18004bd2c getDeviceVersion                           hdr=01 04 04 01 
+0x18004ca1c getDeviceBattery                           hdr=01 01 02 01 
+0x18004ccac getDeviceChargingStatus                    hdr=06 08 02 01 
+0x18004cf3c getDeviceBrightness                        hdr=01 06 20 01 
+0x18004d2cc getDeviceAllDpi                            hdr=01 06 13 01 
+0x18004dcbc getDeviceReportRate                        hdr=01 06 0d 01 
+0x18004e3cc getDeviceScreenShutdownTime                hdr=01 06 22 01 
+0x18004e75c getDeviceMicrophoneEnable                  hdr=01 01 2a 01 
+0x18004eaec getDeviceStandbyTime                       hdr=01 01 2c 01 
+0x18004ee7c getDeviceStandbyStatus                     hdr=01 01 0d 01 
+0x18004f1ec getDeviceSupportMicrophone                 hdr=01 06 37 01 
+0x18004f47c getDeviceSupportButtonFunc                 hdr=01 06 38 01 
+0x18004f70c getDeviceSupportLedEffect                  hdr=01 06 39 01 
+0x1800506bc getDeviceAudioButtonSystemMode             hdr=01 06 51 01 
+0x180050a4c getDeviceMotorStrength                     hdr=01 06 40 01 
+0x180050ddc getDeviceWheelLevel                        hdr=01 06 42 01 
+0x18005116c getDeviceHardwareVersion                   hdr=01 01 41 01 
+0x1800513fc getDeviceSleepTime                         hdr=01 01 42 01 
+0x18005178c getDeviceMicNRLevel                        hdr=01 01 90 01 
+0x180051c4c getDeviceMicGainParam                      hdr=01 03 15 01 
+0x1800520ec getDeviceHooksMode                         hdr=01 0b 89 01 
+0x18005247c getDeviceMuteMode                          hdr=01 01 0e 01 
+0x18005280c getDeviceMuteEnableStatus                  hdr=01 01 91 01 
+0x180052b9c getHeadphoneJackMode                       hdr=01 01 0f 01 
+0x180052f2f setDongleReboot                            hdr=06 01 26 00 pt4(d)=esi
+0x1800531df setDeviceReboot                            hdr=01 01 0c 00 pt4(d)=esi
+0x18005388c getDeviceCursorFunctionDpi                 hdr=01 07 09 01 
+0x180053c1c getDeviceMotorVibrationParams              hdr=01 07 35 01 
+0x1800540bc getDeviceSupportCursorFunction             hdr=01 07 30 01 
+0x18005434c getDeviceCursorFunctionStatus              hdr=01 07 31 01 
+0x1800545dc getDeviceCurrentCursorFunction             hdr=81 07 1a 01 
+0x18005486c getDeviceSpotlightStatus                   hdr=01 07 1b 01 pt4(b)=dil
+0x180054bfc getDeviceMagnifierGlassStatus              hdr=01 07 1b 01 pt4(b)=1
+0x180054f8c getDeviceDigitalLaserStatus                hdr=01 07 1b 01 pt4(b)=2
+0x18005531c getDevicePhysicalLaserStatus               hdr=01 07 1b 01 pt4(b)=4
+0x1800556ac getDeviceAnnotationStatus                  hdr=01 07 1b 01 pt4(b)=8
+0x180055a3c getDeviceAirMouseStatus                    hdr=01 07 1b 01 pt4(b)=9
+0x180055dcc getDeviceKeyPageUpLongPressFunction        hdr=01 07 33 01 pt4(b)=1
+0x18005626c getDeviceKeyPageDownLongPressFunction      hdr=01 07 33 01 pt4(b)=dil
+0x18005670c getKeyboardIQSKeyPressPressureValue        hdr=01 01 2d 01 
+0x18005699f setKeyboardIQSKeyPressPressureValue        hdr=01 01 2d 00 pt4(w)=si
+0x180056c2c getKeyboardIQSKeyReleasePressureValue      hdr=01 01 2e 01 
+0x180056ebf setKeyboardIQSKeyReleasePressureValue      hdr=01 01 2e 00 pt4(w)=si
+0x18005714c getExpertMouseSWStatus                     hdr=01 01 10 01 
+0x18005771c getDeviceIndicatorLightAllParams           hdr=01 0b 88 01 
+0x1800587cc getDeviceDialMiniLedParams                 hdr=01 01 43 01 

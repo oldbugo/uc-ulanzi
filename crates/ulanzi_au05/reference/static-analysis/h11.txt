@@ -1,0 +1,261 @@
+80044220: mov         qword ptr [rsp+18h],rbx
+80044225: push        rbp
+80044226: push        rsi
+80044227: push        rdi
+80044228: push        r12
+8004422A: push        r13
+8004422C: push        r14
+8004422E: push        r15
+80044230: lea         rbp,[rsp-80h]
+80044235: sub         rsp,180h
+8004423C: movaps      xmmword ptr [rsp+0000000000000170h],xmm6
+80044244: mov         rax,qword ptr [00000001800AD100h]
+8004424B: xor         rax,rsp
+8004424E: mov         qword ptr [rbp+60h],rax
+80044252: mov         r14,rdx
+80044255: mov         rdi,rcx
+80044258: movzx       eax,byte ptr [rdx]
+8004425B: add         eax,0FFFFFFF5h
+8004425E: cmp         eax,78h
+80044261: ja          0000000180044D11
+80044267: cdqe
+80044269: lea         rdx,[0000000180000000h]
+80044270: movzx       eax,byte ptr [rdx+rax+0000000000044DA0h]
+80044278: mov         ecx,dword ptr [rdx+rax*4+0000000000044D50h]
+8004427F: add         rcx,rdx
+80044282: jmp         rcx
+80044284: mov         rsi,qword ptr [rdi]
+80044287: test        rsi,rsi
+8004428A: je          0000000180044D11
+80044290: cmp         byte ptr [rdi+00000000000000BDh],0
+80044297: je          0000000180044D11
+8004429D: mov         rax,qword ptr [rsi]
+800442A0: mov         rbx,qword ptr [rax+0000000000000268h]
+800442A7: lea         rdx,[rdi+8]
+800442AB: lea         rcx,[rbp-60h]
+800442AF: call        000000018000EC70
+800442B4: movzx       r9d,word ptr [r14+1]
+800442B9: mov         r8d,2
+800442BF: mov         rdx,rax
+800442C2: mov         rcx,rsi
+800442C5: call        rbx
+800442C7: jmp         0000000180044D11
+800442CC: movzx       esi,byte ptr [r14+1]
+800442D1: and         sil,1
+800442D5: mov         byte ptr [rdi+00000000000000B0h],sil
+800442DC: mov         r14,qword ptr [rdi]
+800442DF: test        r14,r14
+800442E2: je          0000000180044D11
+800442E8: cmp         byte ptr [rdi+00000000000000BDh],0
+800442EF: je          0000000180044D11
+800442F5: mov         rax,qword ptr [r14]
+800442F8: mov         rbx,qword ptr [rax+20h]
+800442FC: lea         rdx,[rdi+8]
+80044300: lea         rcx,[rbp-60h]
+80044304: call        000000018000EC70
+80044309: movzx       r9d,sil
+8004430D: mov         r8d,2
+80044313: mov         rdx,rax
+80044316: mov         rcx,r14
+80044319: call        rbx
+8004431B: jmp         0000000180044D11
+80044320: cmp         byte ptr [rdi+00000000000002D5h],0
+80044327: je          0000000180044D11
+8004432D: movsd       xmm0,mmword ptr [r14+1]
+80044333: movsd       mmword ptr [rsp+50h],xmm0
+80044339: mov         eax,dword ptr [r14+9]
+8004433D: mov         dword ptr [rsp+58h],eax
+80044341: movzx       eax,word ptr [r14+0Dh]
+80044346: mov         word ptr [rsp+5Ch],ax
+8004434B: movzx       eax,byte ptr [r14+0Fh]
+80044350: mov         byte ptr [rsp+5Eh],al
+80044354: lea         rdx,[rsp+50h]
+80044359: mov         rcx,rdi
+8004435C: call        000000018003EDD0
+80044361: jmp         0000000180044D11
+80044366: movzx       r14d,byte ptr [r14+1]
+8004436B: mov         rsi,qword ptr [rdi]
+8004436E: test        rsi,rsi
+80044371: je          0000000180044D11
+80044377: cmp         byte ptr [rdi+00000000000000BDh],0
+8004437E: je          0000000180044D11
+80044384: mov         eax,dword ptr [rdi+00000000000002D0h]
+8004438A: cmp         r14d,eax
+8004438D: jne         0000000180044398
+8004438F: cmp         eax,0FFFFFFFFh
+80044392: jne         0000000180044D11
+80044398: mov         dword ptr [rdi+00000000000002D0h],r14d
+8004439F: mov         rax,qword ptr [rsi]
+800443A2: mov         rbx,qword ptr [rax+00000000000000D8h]
+800443A9: lea         rdx,[rdi+8]
+800443AD: lea         rcx,[rbp-60h]
+800443B1: call        000000018000EC70
+800443B6: mov         r9d,r14d
+800443B9: mov         r8d,2
+800443BF: mov         rdx,rax
+800443C2: mov         rcx,rsi
+800443C5: call        rbx
+800443C7: jmp         0000000180044D11
+800443CC: movzx       r13d,byte ptr [r14+1]
+800443D1: movzx       eax,byte ptr [r14+2]
+800443D6: mov         dword ptr [rbp-78h],eax
+800443D9: movzx       r14d,word ptr [r14+3]
+800443DE: mov         r12d,r14d
+800443E1: shr         r12d,0Ch
+800443E5: and         r14d,0FFFh
+800443EC: mov         r15,qword ptr [rdi]
+800443EF: test        r15,r15
+800443F2: je          0000000180044D11
+800443F8: cmp         byte ptr [rdi+00000000000000BDh],0
+800443FF: je          0000000180044D11
+80044405: lea         rdx,[rdi+8]
+80044409: mov         rax,qword ptr [r15]
+8004440C: lea         rcx,[rbp-60h]
+80044410: mov         rsi,qword ptr [rax+60h]
+80044414: cmp         byte ptr [rdi+65h],0
+80044418: je          0000000180044451
+8004441A: cmp         byte ptr [rdi+64h],0
+8004441E: sete        bl
+80044421: call        000000018000EC70
+80044426: mov         byte ptr [rsp+38h],bl
+8004442A: mov         dword ptr [rsp+30h],r13d
+8004442F: mov         dword ptr [rsp+28h],r12d
+80044434: mov         ecx,dword ptr [rbp-78h]
+80044437: mov         dword ptr [rsp+20h],ecx
+8004443B: mov         r9d,r14d
+8004443E: mov         r8d,2
+80044444: mov         rdx,rax
+80044447: mov         rcx,r15
+8004444A: call        rsi
+8004444C: jmp         0000000180044D11
+80044451: cmp         byte ptr [rdi+64h],0
+80044455: sete        bl
+80044458: call        000000018000EC70
+8004445D: mov         byte ptr [rsp+38h],bl
+80044461: mov         dword ptr [rsp+30h],r14d
+80044466: mov         dword ptr [rsp+28h],r12d
+8004446B: mov         ecx,dword ptr [rbp-78h]
+8004446E: mov         dword ptr [rsp+20h],ecx
+80044472: mov         r9d,r13d
+80044475: mov         r8d,2
+8004447B: mov         rdx,rax
+8004447E: mov         rcx,r15
+80044481: call        rsi
+80044483: jmp         0000000180044D11
+80044488: xorps       xmm0,xmm0
+8004448B: movups      xmmword ptr [rbp+50h],xmm0
+8004448F: xor         esi,esi
+80044491: mov         qword ptr [rbp+50h],rsi
+80044495: mov         qword ptr [rbp+58h],rsi
+80044499: mov         ecx,18h
+8004449E: call        0000000180060FE8
+800444A3: mov         r15,rax
+800444A6: mov         qword ptr [rax],rax
+800444A9: mov         qword ptr [rax+8],rax
+800444AD: mov         qword ptr [rbp+50h],rax
+800444B1: mov         ebx,esi
+800444B3: lea         r12,[r14+1]
+800444B7: mov         r13,0AAAAAAAAAAAAAAAh
+800444C1: nop         dword ptr [rax]
+800444C5: nop         word ptr [rax+rax+0000000000000000h]
+800444D0: movsx       r14d,byte ptr [rbx+r12]
+800444D5: lea         eax,[r14+1]
+800444D9: test        eax,0FFFFFFFDh
+800444DE: jne         0000000180044522
+800444E0: cmp         qword ptr [rbp+58h],r13
+800444E4: je          0000000180044D40
+800444EA: lea         rax,[rbp+50h]
+800444EE: mov         qword ptr [rbp-70h],rax
+800444F2: mov         qword ptr [rbp-68h],rsi
+800444F6: mov         ecx,18h
+800444FB: call        0000000180060FE8
+80044500: mov         dword ptr [rax+10h],r14d
+80044504: inc         qword ptr [rbp+58h]
+80044508: mov         rcx,qword ptr [r15+8]
+8004450C: mov         qword ptr [rax],r15
+8004450F: mov         qword ptr [rax+8],rcx
+80044513: mov         qword ptr [rbp-68h],rsi
+80044517: mov         qword ptr [r15+8],rax
+8004451B: mov         qword ptr [rcx],rax
+8004451E: mov         r15,qword ptr [rbp+50h]
+80044522: inc         rbx
+80044525: cmp         rbx,8
+80044529: jl          00000001800444D0
+8004452B: cmp         qword ptr [rbp+58h],0
+80044530: jbe         0000000180044678
+80044536: mov         rax,qword ptr [rdi]
+80044539: mov         qword ptr [rsp+60h],rax
+8004453E: test        rax,rax
+80044541: je          0000000180044678
+80044547: cmp         byte ptr [rdi+00000000000000BDh],0
+8004454E: je          0000000180044678
+80044554: mov         rax,qword ptr [rax]
+80044557: mov         rax,qword ptr [rax+68h]
+8004455B: mov         qword ptr [rbp-40h],rax
+8004455F: lea         rcx,[rbp-70h]
+80044563: mov         qword ptr [rbp-78h],rcx
+80044567: mov         qword ptr [rbp-70h],rsi
+8004456B: mov         qword ptr [rbp-68h],rsi
+8004456F: mov         rbx,qword ptr [r15]
+80044572: lea         rax,[rbp-70h]
+80044576: mov         qword ptr [rbp-60h],rax
+8004457A: mov         r14,rsi
+8004457D: mov         qword ptr [rbp-58h],rsi
+80044581: xorps       xmm0,xmm0
+80044584: movdqu      xmmword ptr [rbp-50h],xmm0
+80044589: cmp         rbx,r15
+8004458C: je          000000018004460B
+8004458E: lea         rax,[rbp-70h]
+80044592: mov         qword ptr [rsp+50h],rax
+80044597: mov         qword ptr [rsp+58h],rsi
+8004459C: mov         ecx,18h
+800445A1: call        0000000180060FE8
+800445A6: mov         r13,rax
+800445A9: mov         ecx,dword ptr [rbx+10h]
+800445AC: mov         dword ptr [rax+10h],ecx
+800445AF: mov         qword ptr [rsp+58h],rsi
+800445B4: mov         qword ptr [rbp-48h],rax
+800445B8: mov         r12,rax
+800445BB: mov         qword ptr [rbp-50h],rax
+800445BF: mov         r14d,1
+800445C5: mov         qword ptr [rbp-58h],r14
+800445C9: mov         rbx,qword ptr [rbx]
+800445CC: cmp         rbx,r15
+800445CF: je          0000000180044609
+800445D1: mov         qword ptr [rsp+58h],rsi
+800445D6: mov         ecx,18h
+800445DB: call        0000000180060FE8
+800445E0: mov         ecx,dword ptr [rbx+10h]
+800445E3: mov         dword ptr [rax+10h],ecx
+800445E6: mov         qword ptr [r12],rax
+800445EA: mov         qword ptr [rax+8],r12
+800445EE: mov         qword ptr [rsp+58h],rsi
+800445F3: mov         r12,rax
+800445F6: mov         qword ptr [rbp-50h],rax
+800445FA: inc         r14
+800445FD: mov         qword ptr [rbp-58h],r14
+80044601: mov         rbx,qword ptr [rbx]
+80044604: cmp         rbx,r15
+80044607: jne         00000001800445D1
+80044609: jmp         0000000180044613
+8004460B: mov         r13,qword ptr [rbp-48h]
+8004460F: mov         r12,qword ptr [rbp-50h]
+80044613: lea         rax,[rbp-70h]
+80044617: mov         qword ptr [rsp+50h],rax
+8004461C: mov         qword ptr [rsp+58h],rsi
+80044621: mov         ecx,18h
+80044626: call        0000000180060FE8
+8004462B: test        r14,r14
+8004462E: jne         0000000180044639
+80044630: mov         qword ptr [rax],rax
+80044633: mov         qword ptr [rax+8],rax
+80044637: jmp         0000000180044648
+80044639: mov         qword ptr [rax],r13
+8004463C: mov         qword ptr [rax+8],r12
+80044640: mov         qword ptr [r13+8],rax
+80044644: mov         qword ptr [r12],rax
+80044648: mov         qword ptr [rbp-68h],r14
+8004464C: mov         qword ptr [rbp-70h],rax
+80044650: lea         rdx,[rdi+8]
+80044654: lea         rcx,[rsp+68h]
+80044659: call        000000018000EC70
