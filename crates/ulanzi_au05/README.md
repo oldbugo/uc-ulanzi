@@ -34,11 +34,16 @@ Unified Control uses this crate. The vault page "Ulanzi AU05 Vibe Key facts" has
 | Battery, standby status, standby time, power-off time, control code, key typing, light, hooks mode, mic noise reduction (gets) | see `protocol.rs` | Answered (2026-11-16) |
 | Set standby time | `01 01 2c 02 <u32 s>` | Sent and read back (600 s) |
 | Set key typing | `01 06 50 00 <btn> 01 <n> <entries>` | Sent and read back (K3 = F22) |
-| Set power-off time, light mode, all-on brightness, mic noise reduction, light work-mode type | from static analysis | Not sent yet |
+| Set power-off time, light mode, all-on brightness, mic noise reduction | from static analysis | Not sent yet |
+| Set one field of a light mode record (mask 0x04 type, 0x08 time, 0x10 breathe level, 0x20 breathe brightness, 0x40 always-on brightness) | `01 0b 88 04 <mask> <rec> ..` with the value at byte `8 + 5*rec + field` | Not sent yet |
+| Set hooks mode | `01 0b 89 04 <0|1>` | Not sent yet |
 | Get or set key typing for the knob press (button 3) | same layout, button 3 | Not sent yet |
 
-`Request::verified_on_hardware()` records this table. Unified Control refuses an unverified set on a
-real key. When the orchestrator has checked one on the real key, change that function and its test.
+`Request::verified_on_hardware()` records this table; Unified Control labels the others "Untested".
+Since 2026-11-16 (user request: expose every parameter so the user can test them all at once),
+`Request::allowed_on_real_key()` allows every known command on the real key. The never-send list below,
+the value ranges, one request in flight, the time limits, no retry and the settle after wake still apply.
+When a command is confirmed on the real key, add it to `verified_on_hardware` and its test.
 
 Never sent (no encoder exists, `Request::plain` checks, and the real transport refuses them): reboot (0x0C, 0x26), serial
 number, flash ID or UUID (0x0A, 0x0B, 0x81), receiver command 0x05, firmware or OTA, keep-alive 0x23.

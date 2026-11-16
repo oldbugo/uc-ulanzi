@@ -18,7 +18,7 @@ pub mod tea;
 pub mod windows;
 
 pub use protocol::{
-    Control, ControlEvent, Incoming, KeyEntry, KeyId, KeyTyping, LightState, MicNr, Reply, Request,
+    Control, ControlEvent, Incoming, KeyEntry, KeyId, KeyTyping, LightField, LightState, MicNr, Reply, Request,
     SleepTime, StatusEvent,
 };
 pub use session::{Failure, Output, Session, SessionConfig, SessionState, Transport};

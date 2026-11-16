@@ -12,7 +12,7 @@
 //!   knob event, so a setting never lands while the user is pressing keys.
 //! - At the first stall the session pauses (sends nothing for `stall_pause`, then only after a new message
 //!   from the key). After `max_stalls` stalls in a row it is suspended until [`Session::resume`].
-//! - With `real_key`, requests not checked on the real key (`Request::verified_on_hardware`) are refused.
+//! - With `real_key`, requests not allowed on the real key (`Request::allowed_on_real_key`) are refused.
 use crate::protocol::{self, ControlEvent, Incoming, Report, Reply, Request, StatusEvent};
 use std::collections::VecDeque;
 use std::io;
@@ -234,7 +234,7 @@ impl<T: Transport> Session<T> {
     /// list of commands checked on hardware.
     pub fn submit(&mut self, ticket: u64, request: Request) -> Result<(), Failure> {
         request.validate().map_err(Failure::Invalid)?;
-        if self.cfg.real_key && !request.verified_on_hardware() {
+        if self.cfg.real_key && !request.allowed_on_real_key() {
             return Err(Failure::Unverified);
         }
         if self.suspended {
