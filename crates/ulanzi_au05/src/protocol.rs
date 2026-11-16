@@ -197,22 +197,32 @@ pub fn parse(p: &Plain) -> Incoming {
 
 // ---------- values ----------
 
-/// The controls whose typing can be set (button index 0..3). K1..K3 are proven on the real key; the knob
-/// press (button 3) is not: its key-typing get and set are marked unverified.
+/// The controls whose typing can be set (button index 0..5). K1..K3 are proven on the real key; the knob
+/// press (button 3) is not: its key-typing get and set are marked unverified. Knob right (button 4) typing
+/// F23 was proven on 2026-11-17 (user-run: get, set F23, read back; the knob then stopped scrolling); knob
+/// left (button 5) uses the same command and is marked unverified.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum KeyId {
     K1,
     K2,
     K3,
     KnobPress,
+    KnobRight,
+    KnobLeft,
 }
 impl KeyId {
+    /// The four keys (K1..K3 and the knob press).
     pub const ALL: [KeyId; 4] = [KeyId::K1, KeyId::K2, KeyId::K3, KeyId::KnobPress];
+    /// The two knob turn directions.
+    pub const TURNS: [KeyId; 2] = [KeyId::KnobRight, KeyId::KnobLeft];
+    /// Every control whose typing can be set, in button order.
+    pub const EVERY: [KeyId; 6] =
+        [KeyId::K1, KeyId::K2, KeyId::K3, KeyId::KnobPress, KeyId::KnobRight, KeyId::KnobLeft];
     pub fn index(self) -> u8 {
         self as u8
     }
     pub fn from_index(i: u8) -> Option<Self> {
-        Self::ALL.get(i as usize).copied()
+        Self::EVERY.get(i as usize).copied()
     }
     pub fn control(self) -> Control {
         Control::from_index(self.index() as u16)
@@ -224,6 +234,8 @@ impl KeyId {
             KeyId::K2 => "Enter",
             KeyId::K3 => "Esc",
             KeyId::KnobPress => "Backspace",
+            KeyId::KnobRight => "scroll down",
+            KeyId::KnobLeft => "scroll up",
         }
     }
 }
@@ -593,7 +605,8 @@ impl Request {
 
     pub fn verified_on_hardware(&self) -> bool {
         match self {
-            Request::GetKeyTyping(KeyId::KnobPress) | Request::SetKeyTyping(KeyId::KnobPress, _) => false,
+            Request::GetKeyTyping(KeyId::KnobPress | KeyId::KnobLeft)
+            | Request::SetKeyTyping(KeyId::KnobPress | KeyId::KnobLeft, _) => false,
             Request::SetStandbyTime(_) | Request::SetKeyTyping(..) => true,
             r => !r.is_set(),
         }
@@ -891,6 +904,17 @@ mod tests {
         assert_eq!(Request::SetKeyTyping(KeyId::KnobPress, knob.clone()).plain(), hex("01 06 50 00 03 01 01 02 6e"));
         assert!(!Request::SetKeyTyping(KeyId::KnobPress, knob).verified_on_hardware());
         assert!(!Request::GetKeyTyping(KeyId::KnobPress).verified_on_hardware());
+        // Knob right typing F23, as run on the real key on 2026-11-17; knob left is the same command (F24).
+        let right = KeyTyping::own_code(KeyId::KnobRight);
+        assert_eq!(Request::GetKeyTyping(KeyId::KnobRight).plain(), hex("01 06 50 01 04"));
+        assert_eq!(Request::SetKeyTyping(KeyId::KnobRight, right.clone()).plain(), hex("01 06 50 00 04 01 01 02 72"));
+        assert_eq!(Request::SetKeyTyping(KeyId::KnobRight, KeyTyping::factory()).plain(), hex("01 06 50 00 04 01 00"));
+        assert!(Request::SetKeyTyping(KeyId::KnobRight, right).verified_on_hardware());
+        assert!(Request::GetKeyTyping(KeyId::KnobRight).verified_on_hardware());
+        let left = KeyTyping::own_code(KeyId::KnobLeft);
+        assert_eq!(Request::SetKeyTyping(KeyId::KnobLeft, left.clone()).plain(), hex("01 06 50 00 05 01 01 02 73"));
+        assert!(!Request::SetKeyTyping(KeyId::KnobLeft, left).verified_on_hardware());
+        assert_eq!(KeyTyping::factory().label(KeyId::KnobRight), "Factory default (scroll down)");
         assert!(SleepTime::new(1234).is_none());
         assert!(SleepTime::new(0).is_some());
     }

@@ -21,7 +21,7 @@ pub struct FakeState {
     pub light: LightState,
     pub hooks_mode: u8,
     pub mic: MicNr,
-    pub typing: [KeyTyping; 4],
+    pub typing: [KeyTyping; 6],
     /// Every plaintext the fake received, in order.
     pub received: Vec<Vec<u8>>,
     /// Commands the fake does not know. A test failure if not empty.
@@ -60,7 +60,14 @@ impl Default for FakeState {
             },
             hooks_mode: 0,
             mic: MicNr { level: 0, a: 100, b: 100 },
-            typing: [KeyTyping::factory(), KeyTyping::factory(), KeyTyping::own_code(KeyId::K3), KeyTyping::factory()],
+            typing: [
+                KeyTyping::factory(),
+                KeyTyping::factory(),
+                KeyTyping::own_code(KeyId::K3),
+                KeyTyping::factory(),
+                KeyTyping::factory(),
+                KeyTyping::factory(),
+            ],
             received: Vec::new(),
             forbidden: Vec::new(),
             typed: Vec::new(),
@@ -113,7 +120,8 @@ impl FakeHandle {
         s.awake = false;
         s.next_status = None;
     }
-    /// Press and release a control. A press wakes the key. K1..K3 also "type" their keystroke list.
+    /// Press and release a control. A press wakes the key. Every control also "types" its keystroke list
+    /// (the knob turns: their factory scroll, or what they were set to type).
     pub fn click(&self, control: Control) {
         self.wake();
         let mut s = self.lock();
@@ -123,7 +131,7 @@ impl FakeHandle {
             let r = plain_report(&[0x8b, 0x10, code, pressed, (idx & 0xff) as u8, (idx >> 8) as u8]);
             s.inbox.push_back((Instant::now(), r));
         }
-        if let Some(k) = KeyId::from_index(idx as u8).filter(|_| idx < 4) {
+        if let Some(k) = KeyId::from_index(idx as u8).filter(|_| idx < 6) {
             let t = s.typing[k.index() as usize].clone();
             let label = if t.is_factory() { k.factory_label().to_string() } else { t.label(k) };
             s.typed.push(label);
@@ -174,7 +182,7 @@ fn answer(s: &mut FakeState, p: &[u8; PLAIN_LEN]) -> Option<Vec<u8>> {
             let code = Control::from_index(p[5] as u16).own_code().unwrap_or(0);
             [head(1), vec![0, p[5], code]].concat()
         }
-        (0x06, 0x50, 0x01) if p[4] <= 3 => {
+        (0x06, 0x50, 0x01) if p[4] <= 5 => {
             let t = &s.typing[p[4] as usize];
             let mut v = head(1);
             v.extend([p[4], u8::from(!t.is_factory()), t.0.len() as u8]);
@@ -187,7 +195,7 @@ fn answer(s: &mut FakeState, p: &[u8; PLAIN_LEN]) -> Option<Vec<u8>> {
             }
             v
         }
-        (0x06, 0x50, 0x00) if p[4] <= 3 && p[5] == 1 && (p[6] as usize) <= protocol::MAX_KEY_ENTRIES => {
+        (0x06, 0x50, 0x00) if p[4] <= 5 && p[5] == 1 && (p[6] as usize) <= protocol::MAX_KEY_ENTRIES => {
             let n = p[6] as usize;
             let entries = (0..n)
                 .map(|i| match (p[7 + 2 * i], p[8 + 2 * i]) {
