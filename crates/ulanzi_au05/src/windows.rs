@@ -3,7 +3,13 @@
 //! orchestrator, with the user present, may open the real key.
 //!
 //! Based on the reviewed D200H transport in `ulanzi_dock::windows`: overlapped I/O with a deadline on every
-//! transfer, `CancelIoEx` on a deadline, and kernel-owned buffers kept alive until the driver retires them.
+//! write, `CancelIoEx` on a write deadline, and kernel-owned buffers kept alive until the driver retires them.
+//!
+//! Reads (2026-11-17, real-key bug: the worker saw no report at all while scripts on the same PC did): one
+//! overlapped read is kept pending all the time, as hidapi does. A read with a deadline waits on it and, if
+//! nothing came, leaves it pending for the next call instead of cancelling it; it is re-armed after each
+//! report and cancelled only when the transport is dropped. Counters and an open-time summary of every
+//! matching collection are available through `Transport::diagnostics` for the app's log.
 use crate::protocol::{Report, INTERFACE, PRODUCT_ID, REPORT_ID, REPORT_LEN, USAGE_PAGE, VENDOR_ID};
 use crate::session::Transport;
 use std::{
@@ -96,26 +102,94 @@ unsafe fn validate(handle: HANDLE, hardware_ids: &str) -> io::Result<()> {
     Ok(())
 }
 
+/// Read counters for the log.
+#[derive(Clone, Debug, Default)]
+pub struct ReadStats {
+    pub armed: u64,
+    pub reports: u64,
+    pub waits_without_data: u64,
+    pub short_reports: u64,
+    /// Report IDs seen (byte 0), first eight distinct.
+    pub ids: Vec<u8>,
+}
+
 /// The receiver's private collection, opened with shared read/write access and overlapped I/O.
 pub struct WindowsAu05 {
     file: Arc<Handle>,
     poisoned: bool,
+    /// The read kept pending between calls.
+    read_op: Option<Pending>,
+    stats: ReadStats,
+    /// What `find` saw: the number of matching collections and each one's capabilities.
+    opened: String,
 }
 
 impl WindowsAu05 {
     /// Is an AU05 receiver present? Metadata-only: opens no collection for reading or writing.
     pub fn present() -> bool {
-        unsafe { find(false) }.is_ok()
+        unsafe { find(false) }.is_ok_and(|(_, _)| true)
+    }
+    pub fn stats(&self) -> &ReadStats {
+        &self.stats
     }
 
     /// Enumerate and open only FFF1:00DD, MI_03, usage page 0xFFFC, 64-byte reports.
     /// There is no auto-open, start-up hook or default constructor.
     pub fn open_first() -> io::Result<Self> {
-        let file = unsafe { find(true) }?.expect("open requested");
+        let (file, opened) = unsafe { find(true) }?;
         Ok(Self {
-            file: Arc::new(file),
+            file: Arc::new(file.expect("open requested")),
             poisoned: false,
+            read_op: None,
+            stats: ReadStats::default(),
+            opened,
         })
+    }
+
+    /// Wait up to `timeout` for the pending read (arming one if none is pending). A read that does not
+    /// complete in time stays pending for the next call: it is not cancelled.
+    fn read_pending(&mut self, timeout: Duration) -> io::Result<Option<Report>> {
+        if self.poisoned {
+            return Err(io::Error::new(io::ErrorKind::BrokenPipe, "HID cancellation incomplete; reconnect required"));
+        }
+        if self.read_op.is_none() {
+            let mut op = Pending::new(self.file.clone())?;
+            let started = unsafe {
+                ReadFile(self.file.0, op.buffer.as_mut_ptr(), REPORT_LEN as u32, null_mut(), &mut *op.overlapped)
+            };
+            if started == 0 {
+                let err = io::Error::last_os_error();
+                if err.raw_os_error() != Some(ERROR_IO_PENDING as i32) {
+                    return Err(err);
+                }
+            }
+            self.stats.armed += 1;
+            self.read_op = Some(op);
+        }
+        let op = self.read_op.as_ref().expect("armed above");
+        let ms = timeout.min(MAX_IO_WAIT).as_millis() as u32;
+        let wait = unsafe { WaitForSingleObject(op.event.0, ms) };
+        if wait == WAIT_TIMEOUT {
+            self.stats.waits_without_data += 1;
+            return Ok(None); // still pending: picked up by the next call
+        }
+        let op = self.read_op.take().expect("armed above");
+        if wait != WAIT_OBJECT_0 {
+            return Err(io::Error::last_os_error());
+        }
+        let mut count = 0;
+        if unsafe { GetOverlappedResult(self.file.0, &*op.overlapped, &mut count, 0) } == 0 {
+            return Err(io::Error::last_os_error());
+        }
+        if count as usize != REPORT_LEN {
+            self.stats.short_reports += 1;
+            return Err(io::Error::new(io::ErrorKind::InvalidData, "short HID report"));
+        }
+        self.stats.reports += 1;
+        if self.stats.ids.len() < 8 && !self.stats.ids.contains(&op.buffer[0]) {
+            self.stats.ids.push(op.buffer[0]);
+        }
+        Ok(Some(*op.buffer))
     }
 
     fn transfer(&mut self, write: Option<&Report>, timeout: Duration) -> io::Result<Option<Report>> {
@@ -195,16 +269,55 @@ impl Transport for WindowsAu05 {
         self.transfer(Some(report), timeout).map(|_| ())
     }
     fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>> {
-        if timeout.is_zero() {
-            // A zero wait still needs a pending read to be cancelled cleanly; use the shortest real wait.
-            return self.transfer(None, Duration::from_millis(1));
-        }
-        self.transfer(None, timeout)
+        self.read_pending(timeout)
+    }
+    fn diagnostics(&self) -> Option<String> {
+        let s = &self.stats;
+        let ids: Vec<String> = s.ids.iter().map(|i| format!("{i:#04x}")).collect();
+        Some(format!(
+            "{}; reads armed {}, reports {}, waits without data {}, short {}, report ids [{}]",
+            self.opened, s.armed, s.reports, s.waits_without_data, s.short_reports, ids.join(" ")
+        ))
     }
 }
 
-/// Enumerate HID interfaces. With `open`, return the opened collection; without, only check presence.
-unsafe fn find(open: bool) -> io::Result<Option<Handle>> {
+impl Drop for WindowsAu05 {
+    /// Cancel the pending read. Its buffers stay alive until the driver retires them.
+    fn drop(&mut self) {
+        if let Some(op) = self.read_op.take() {
+            unsafe { CancelIoEx(self.file.0, &*op.overlapped) };
+            if unsafe { WaitForSingleObject(op.event.0, CANCEL_WAIT_MS) } != WAIT_OBJECT_0 {
+                let pending: &'static mut Pending = Box::leak(Box::new(op));
+                std::thread::spawn(move || {
+                    if unsafe { WaitForSingleObject(pending.event.0, INFINITE) } == WAIT_OBJECT_0 {
+                        unsafe { drop(Box::from_raw(pending as *mut Pending)) };
+                    }
+                });
+            }
+        }
+    }
+}
+
+/// Capabilities of a collection, for the open-time summary (no path, no serial).
+unsafe fn caps_summary(handle: HANDLE) -> String {
+    let mut data: PHIDP_PREPARSED_DATA = 0;
+    if !unsafe { HidD_GetPreparsedData(handle, &mut data) } {
+        return "caps unreadable".into();
+    }
+    let data = Preparsed(data);
+    let mut caps: HIDP_CAPS = unsafe { zeroed() };
+    if unsafe { HidP_GetCaps(data.0, &mut caps) } != HIDP_STATUS_SUCCESS {
+        return "caps unreadable".into();
+    }
+    format!(
+        "usage page {:#06x} usage {:#06x} in {} out {} feature {}",
+        caps.UsagePage, caps.Usage, caps.InputReportByteLength, caps.OutputReportByteLength, caps.FeatureReportByteLength
+    )
+}
+
+/// Enumerate HID interfaces. With `open`, return the opened collection (the first that matches) and a summary
+/// of every collection on the interface; without, only check presence.
+unsafe fn find(open: bool) -> io::Result<(Option<Handle>, String)> {
     let mut guid = unsafe { zeroed() };
     unsafe { HidD_GetHidGuid(&mut guid) };
     let set = unsafe { SetupDiGetClassDevsW(&guid, null(), null_mut(), DIGCF_PRESENT | DIGCF_DEVICEINTERFACE) };
@@ -212,6 +325,8 @@ unsafe fn find(open: bool) -> io::Result<Option<Handle>> {
         return Err(io::Error::last_os_error());
     }
     let set = DeviceSet(set);
+    let mut chosen: Option<Handle> = None;
+    let mut seen: Vec<String> = Vec::new();
     for index in 0.. {
         let mut iface: SP_DEVICE_INTERFACE_DATA = unsafe { zeroed() };
         iface.cbSize = size_of::<SP_DEVICE_INTERFACE_DATA>() as u32;
@@ -270,11 +385,15 @@ unsafe fn find(open: bool) -> io::Result<Option<Handle>> {
             continue;
         }
         let probe = Handle(probe);
-        if unsafe { validate(probe.0, &ids) }.is_err() {
+        let summary = unsafe { caps_summary(probe.0) };
+        let ok = unsafe { validate(probe.0, &ids) }.is_ok();
+        let collection = ids.split('\0').next().unwrap_or("").rsplit('&').next().filter(|c| c.to_ascii_lowercase().starts_with("col")).unwrap_or("");
+        seen.push(format!("{}{}{}", if collection.is_empty() { String::new() } else { format!("{collection} ") }, summary, if ok { " (matches)" } else { "" }));
+        if !ok || chosen.is_some() {
             continue;
         }
         if !open {
-            return Ok(None);
+            return Ok((None, String::new()));
         }
         let file = unsafe {
             CreateFileW(
@@ -292,9 +411,18 @@ unsafe fn find(open: bool) -> io::Result<Option<Handle>> {
         }
         let file = Handle(file);
         unsafe { validate(file.0, &ids) }?;
-        return Ok(Some(file));
+        if let Some(last) = seen.last_mut() {
+            last.push_str(" (opened)");
+        }
+        chosen = Some(file);
     }
-    Err(io::Error::new(io::ErrorKind::NotFound, "AU05 receiver not found"))
+    match chosen {
+        Some(file) => {
+            let n = seen.iter().filter(|x| x.contains("(matches)")).count();
+            Ok((Some(file), format!("receiver MI_03: {} collection(s), {n} matching: {}", seen.len(), seen.join(" | "))))
+        }
+        None => Err(io::Error::new(io::ErrorKind::NotFound, "AU05 receiver not found")),
+    }
 }
 
 struct Pending {
