@@ -24,6 +24,11 @@ pub trait Transport: Send {
     fn write(&mut self, report: &Report, timeout: Duration) -> io::Result<()>;
     /// Wait at most `timeout` for one report. `Ok(None)` when nothing arrived.
     fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>>;
+    /// A short, safe description for the app's log (no paths or serials): what was opened and how reads
+    /// went so far. `None` for transports that have nothing to say.
+    fn diagnostics(&self) -> Option<String> {
+        None
+    }
 }
 
 impl<T: Transport + ?Sized> Transport for Box<T> {
@@ -32,6 +37,9 @@ impl<T: Transport + ?Sized> Transport for Box<T> {
     }
     fn read(&mut self, timeout: Duration) -> io::Result<Option<Report>> {
         (**self).read(timeout)
+    }
+    fn diagnostics(&self) -> Option<String> {
+        (**self).diagnostics()
     }
 }
 
@@ -213,6 +221,10 @@ impl<T: Transport> Session<T> {
             }
         }
         true
+    }
+    /// The transport's diagnostics (see [`Transport::diagnostics`]).
+    pub fn diagnostics(&self) -> Option<String> {
+        self.transport.diagnostics()
     }
     pub fn pending(&self) -> usize {
         self.queue.len() + usize::from(self.inflight.is_some())
